@@ -1,10 +1,8 @@
 package net.exotia.bridge.plugin.http;
 
 import com.google.gson.Gson;
-import eu.okaeri.injector.annotation.Inject;
+import net.exotia.bridge.plugin.api.requests.CreateUserRequest;
 import okhttp3.*;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -31,13 +29,14 @@ public class HttpService {
         function.accept((T1) result.getObject(), result.getResponse());
     }
 
-    private <T1, T2 extends RequestObject> HttpResult sendRequest(String method, String uri, T2 json, Class<T1> tClass, HashMap<String, String> headers) {
+    private <T1, T2 extends RequestObject> HttpResult sendRequest(String method, String uri, T2 json, Class<T1> tClass) {
+        //HashMap<String, String> headers
         RequestBody body = RequestBody.create(this.gson.toJson(json), JSON);
         Request.Builder builder = new Request.Builder()
                 .url(uri)
                 .method(method, json == null ? null : body)
                 .addHeader("Content-Type", "application/json");
-        headers.forEach(builder::addHeader);
+        //headers.forEach(builder::addHeader);
         Request request = builder.build();
         try (Response response = this.httpClient.newCall(request).execute()) {
             assert response.body() != null;

@@ -15,9 +15,20 @@ public class PlayerJoinListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        this.userService.isAuthorized(result -> player.sendMessage(String.valueOf(result)));
+        if (this.userService.getUser(player.getUniqueId()) != null) return;
 
-        player.sendMessage("test");
+        player.sendMessage("Autoryzowanie...");
+        this.userService.isAuthorized(result -> {
+            if (result) player.sendMessage("Autoryzowano pomyslnie!");
+            else {
+                player.sendMessage("Nie posiadasz konta!");
+                player.sendMessage("Trwa tworzenie konta...");
+                this.userService.signUp(player, (isSuccess) -> {
+                    if (isSuccess) player.sendMessage("Konto zostalo pomyslnie utworzone!");
+                });
+            }
+        });
+
 //        User user = User.builder()
 //                .uniqueId(player.getUniqueId())
 //                .lastIp(player.ge)

@@ -2,11 +2,13 @@ package net.exotia.bridge.plugin.user;
 
 import eu.okaeri.injector.annotation.Inject;
 import lombok.SneakyThrows;
+import net.exotia.bridge.plugin.api.requests.CreateUserRequest;
 import net.exotia.bridge.plugin.api.responses.UserResponse;
 import net.exotia.bridge.plugin.configuration.PluginConfiguration;
 import net.exotia.bridge.plugin.http.Callback;
 import net.exotia.bridge.plugin.http.HttpService;
 import net.exotia.bridge.plugin.utils.CipherUtil;
+import okhttp3.Call;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.bukkit.Bukkit;
@@ -57,8 +59,18 @@ public class UserService {
         });
     }
 
-    public void signUp() {
-        this.httpService.post("https://api.exotia.net/auth/signUp", );
+    public void signUp(Player player, Callback callback) {
+        this.httpService.post("https://api.exotia.net/auth/signUp", new CreateUserRequest(player.getUniqueId().toString(), "0.0.0.0"), null, (o, response) -> {
+            if (response.code() != 201) {
+                callback.onSuccess(false);
+                try {
+                    player.kickPlayer(response.code() + " " + response.body().string());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            callback.onSuccess(true);
+        });
     }
 
     public void save(User user) {
