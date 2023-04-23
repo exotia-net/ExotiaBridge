@@ -1,4 +1,4 @@
-package net.exotia.bridge.plugin.api.responses;
+package net.exotia.bridge.shared.services.responses;
 
 import lombok.Getter;
 

@@ -10,8 +10,9 @@
     <packaging>pom</packaging>
     <modules>
         <module>api</module>
-        <module>plugin</module>
+        <module>spigot</module>
         <module>proxy</module>
+        <module>shared</module>
     </modules>
 
     <properties>

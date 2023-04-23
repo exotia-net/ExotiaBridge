@@ -1,4 +1,4 @@
-package net.exotia.bridge.plugin.user;
+package net.exotia.bridge.shared.services.entities;
 
 import lombok.Builder;
 import lombok.Getter;

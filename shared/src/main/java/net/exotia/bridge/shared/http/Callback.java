@@ -1,4 +1,4 @@
-package net.exotia.bridge.plugin.http;
+package net.exotia.bridge.shared.http;
 
 public interface Callback {
     void onSuccess(Boolean result);

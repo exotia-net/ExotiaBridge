@@ -1,4 +1,4 @@
-package net.exotia.bridge.plugin.utils;
+package net.exotia.bridge.shared.utils;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;

@@ -1,8 +1,7 @@
 package net.exotia.bridge.plugin.listeners;
 
 import eu.okaeri.injector.annotation.Inject;
-import net.exotia.bridge.plugin.user.User;
-import net.exotia.bridge.plugin.user.UserService;
+import net.exotia.bridge.shared.services.UserService;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,10 +31,11 @@ public class PlayerJoinListener implements Listener {
 //
 //        player.sendMessage("You logged in with the ip: " + sIp);
         player.sendMessage(player.getUniqueId().toString());
-//        if (this.userService.getUser(player.getUniqueId()) != null) return;
-//
-//        player.sendMessage("Autoryzowanie...");
-//        this.userService.isAuthorized(player, result -> {
+        if (this.userService.getUser(player.getUniqueId()) != null) return;
+
+        player.sendMessage("Autoryzowanie...");
+        this.userService.isAuthorized(player.getUniqueId(), player.getName(), result -> {
+            player.sendMessage(String.valueOf(result));
 //            if (result) player.sendMessage("Autoryzowano pomyslnie!");
 //            else {
 //                player.sendMessage("Nie posiadasz konta!");
@@ -46,7 +46,7 @@ public class PlayerJoinListener implements Listener {
 //                    Bukkit.getScheduler().scheduleSyncDelayedTask(this.plugin, () -> player.kickPlayer(message));
 //                });
 //            }
-//        });
+        });
 
 //        User user = User.builder()
 //                .uniqueId(player.getUniqueId())
