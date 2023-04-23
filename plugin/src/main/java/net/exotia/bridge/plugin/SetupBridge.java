@@ -7,7 +7,7 @@ import net.exotia.bridge.shared.Bridge;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
-public class Test extends Bridge {
+public class SetupBridge extends Bridge {
     @Inject private Plugin plugin;
     @Inject private PluginConfiguration configuration;
 

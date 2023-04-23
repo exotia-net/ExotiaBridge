@@ -7,15 +7,17 @@ import net.exotia.bridge.shared.http.Callback;
 import net.exotia.bridge.shared.http.HttpService;
 import net.exotia.bridge.shared.services.entities.User;
 import net.exotia.bridge.shared.services.responses.UserResponse;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static net.exotia.bridge.shared.Endpoints.AUTH_ME;
-import static net.exotia.bridge.shared.Endpoints.AUTH_SIGNUP;
+import static net.exotia.bridge.shared.Endpoints.*;
 import static net.exotia.bridge.shared.utils.CipherUtil.encrypt;
 import static net.exotia.bridge.shared.utils.CipherUtil.sha256;
 
@@ -25,7 +27,7 @@ public class UserService {
     private Bridge bridge;
 
     public UserService(ApiConfiguration apiConfiguration, Bridge bridge) {
-        this.httpService = new HttpService();
+        this.httpService = bridge.getHttpService();
         this.bridge = bridge;
         this.configuration = apiConfiguration;
     }
@@ -46,8 +48,8 @@ public class UserService {
     public void isAuthorized(UUID uniqueId, String username, Callback callback) {
         this.bridge.async(() -> {
             AtomicBoolean atomicBoolean = new AtomicBoolean(false);
-            this.httpService.get(AUTH_ME, UserResponse.class, ((userResponse, response) -> {
-                if (response.code() == 200) {
+            this.httpService.get(getUri(AUTH_ME, this.configuration), UserResponse.class, ((userResponse, result) -> {
+                if (result.getResponse().code() == 200) {
                     this.registerUser(User.builder()
                             .uniqueId(userResponse.getUuid())
                             .firstIp(userResponse.getFirstIp())
@@ -56,40 +58,30 @@ public class UserService {
                     atomicBoolean.set(true);
                 }
             }), Map.of("ExotiaKey", this.getUserCipher(uniqueId, username)));
-            callback.onSuccess(atomicBoolean.get());
+            callback.onSuccess(atomicBoolean.get(), null);
         });
-//        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
-//            AtomicBoolean atomicBoolean = new AtomicBoolean(false);
-//            this.httpService.get(AUTH_ME, UserResponse.class, ((userResponse, response) -> {
-//                if (response.code() == 200) {
-//                    this.registerUser(User.builder()
-//                            .uniqueId(userResponse.getUuid())
-//                            .firstIp(userResponse.getFirstIp())
-//                            .lastIp(userResponse.getLastIp())
-//                            .build());
-//                    atomicBoolean.set(true);
-//                }
-//            }), Map.of("ExotiaKey", this.getUserCipher(uniqueId, username)));
-//            callback.onSuccess(atomicBoolean.get());
-//        });
     }
+
     public void signUp(UUID uniqueId, String username, Callback callback) {
         this.bridge.async(() -> {
-            this.httpService.post(AUTH_SIGNUP, null, null, (o, response) -> {
-                System.out.println(response.code());
-                callback.onSuccess(response.code() == 200 || response.code() == 201);
+            this.httpService.post(getUri(AUTH_SIGNUP, this.configuration), null, (o, result) -> {
+                Response response = result.getResponse();
+                callback.onSuccess(response.code() == 200 || response.code() == 201, result.getResponseString());
             }, Map.of("ExotiaKey", this.getUserCipher(uniqueId, username)));
         });
-//        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
-//            this.httpService.post(AUTH_SIGNUP, null, null, (o, response) -> {
-//                System.out.println(response.code());
-//                callback.onSuccess(response.code() == 200 || response.code() == 201);
-//            }, Map.of("ExotiaKey", this.getUserCipher(uniqueId, username)));
-//        });
     }
 
     public void save(User user) {
 
+    }
+
+    private String getResponseBody(Response response) {
+        try {
+            ResponseBody responseBodyCopy = response.peekBody(Long.MAX_VALUE);
+            return responseBodyCopy.string();
+        } catch (IOException e) {
+            return null;
+        }
     }
 
     @SneakyThrows
