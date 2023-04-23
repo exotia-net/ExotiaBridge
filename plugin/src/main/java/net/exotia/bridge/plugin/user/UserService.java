@@ -2,27 +2,21 @@ package net.exotia.bridge.plugin.user;
 
 import eu.okaeri.injector.annotation.Inject;
 import lombok.SneakyThrows;
+import net.exotia.bridge.plugin.Endpoints;
 import net.exotia.bridge.plugin.api.requests.CreateUserRequest;
 import net.exotia.bridge.plugin.api.responses.UserResponse;
 import net.exotia.bridge.plugin.configuration.PluginConfiguration;
 import net.exotia.bridge.plugin.http.Callback;
 import net.exotia.bridge.plugin.http.HttpService;
-import net.exotia.bridge.plugin.utils.CipherUtil;
-import okhttp3.Call;
-import okhttp3.Request;
-import okhttp3.Response;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Base64;
+import java.util.*;
 import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static net.exotia.bridge.plugin.Endpoints.AUTH_ME;
+import static net.exotia.bridge.plugin.Endpoints.AUTH_SIGNUP;
 import static net.exotia.bridge.plugin.utils.CipherUtil.*;
 
 public class UserService {
@@ -42,10 +36,10 @@ public class UserService {
                 .findFirst().orElse(null);
     }
 
-    public void isAuthorized(Callback callback) {
+    public void isAuthorized(Player player, Callback callback) {
         Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
             AtomicBoolean atomicBoolean = new AtomicBoolean(false);
-            this.httpService.get("https://api.exotia.net/auth/me", UserResponse.class, ((userResponse, response) -> {
+            this.httpService.get(AUTH_ME, UserResponse.class, ((userResponse, response) -> {
                 if (response.code() == 200) {
                     this.registerUser(User.builder()
                             .uniqueId(userResponse.getUuid())
@@ -54,22 +48,16 @@ public class UserService {
                             .build());
                     atomicBoolean.set(true);
                 }
-            }));
+            }), Map.of("ExotiaKey", this.getUserCipher(player)));
             callback.onSuccess(atomicBoolean.get());
         });
     }
-
     public void signUp(Player player, Callback callback) {
-        this.httpService.post("https://api.exotia.net/auth/signUp", new CreateUserRequest(player.getUniqueId().toString(), "0.0.0.0"), null, (o, response) -> {
-            if (response.code() != 201) {
-                callback.onSuccess(false);
-                try {
-                    player.kickPlayer(response.code() + " " + response.body().string());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            callback.onSuccess(true);
+        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
+            this.httpService.post(AUTH_SIGNUP, new CreateUserRequest(player.getUniqueId().toString(), "0.0.0.0"), null, (o, response) -> {
+                System.out.println(response.code());
+                callback.onSuccess(response.code() == 200 || response.code() == 201);
+            }, null);
         });
     }
 

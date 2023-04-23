@@ -11,6 +11,7 @@
     <modules>
         <module>api</module>
         <module>plugin</module>
+        <module>proxy</module>
     </modules>
 
     <properties>
