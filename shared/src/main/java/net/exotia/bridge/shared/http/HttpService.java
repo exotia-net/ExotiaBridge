@@ -55,7 +55,7 @@ public class HttpService {
         try (Response response = this.httpClient.newCall(request).execute()) {
 //            assert response.body() != null;
             String responseString = response.body().string();
-            return new RequestResult(tClass == null ? null : this.gson.fromJson(responseString, tClass), response, responseString);
+            return new RequestResult(tClass == null ? null : this.gson.fromJson(responseString, tClass), response, response.code() + " | " + responseString);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

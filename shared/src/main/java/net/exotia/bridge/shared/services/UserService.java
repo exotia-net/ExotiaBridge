@@ -1,6 +1,7 @@
 package net.exotia.bridge.shared.services;
 
 import lombok.SneakyThrows;
+import net.exotia.bridge.api.user.ApiUserService;
 import net.exotia.bridge.shared.ApiConfiguration;
 import net.exotia.bridge.shared.Bridge;
 import net.exotia.bridge.shared.http.Callback;
@@ -21,7 +22,7 @@ import static net.exotia.bridge.shared.Endpoints.*;
 import static net.exotia.bridge.shared.utils.CipherUtil.encrypt;
 import static net.exotia.bridge.shared.utils.CipherUtil.sha256;
 
-public class UserService {
+public class UserService implements ApiUserService {
     private HttpService httpService;
     private ApiConfiguration configuration;
     private Bridge bridge;
@@ -39,6 +40,7 @@ public class UserService {
         this.users.add(user);
     }
 
+    @Override
     public User getUser(UUID uniqueId) {
         return this.users.stream()
                 .filter(user -> user.getUniqueId() == uniqueId)
@@ -69,6 +71,7 @@ public class UserService {
                 callback.onSuccess(response.code() == 200 || response.code() == 201, result.getResponseString());
             }, Map.of("ExotiaKey", this.getUserCipher(uniqueId, username)));
         });
+        System.out.println(this.getUserCipher(uniqueId, username));
     }
 
     public void save(User user) {
@@ -84,8 +87,9 @@ public class UserService {
         }
     }
 
+    @Override
     @SneakyThrows
-    private String getUserCipher(UUID uniqueId, String username) {
+    public String getUserCipher(UUID uniqueId, String username) {
         byte[] key = sha256(this.configuration.getApiKey());
         return encrypt(String.join("|", uniqueId.toString(), "0.0.0.0", username), key);
     }

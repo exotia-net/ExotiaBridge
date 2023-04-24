@@ -10,5 +10,5 @@ public class PluginConfiguration extends OkaeriConfig implements ApiConfiguratio
     private String serverId = "survival";
     @Comment("Interface url.")
     private String baseUrl = "https://api.exotia.net";
-    private String apiKey = "XXXX";
+    private String apiKey = "d!noT41*Z8UbxB}JZ<s8'#'GA";
 }
