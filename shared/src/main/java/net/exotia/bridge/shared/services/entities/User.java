@@ -7,14 +7,14 @@ import java.util.UUID;
 
 @Builder
 public class User implements ApiUser {
-    private UUID uniqueId;
+    private UUID uuid;
     private String nickname;
     private String firstIp;
     private String lastIp;
 
     @Override
     public UUID getUniqueId() {
-        return this.uniqueId;
+        return this.uuid;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package net.exotia.bridge.api.user;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface ApiUserService {

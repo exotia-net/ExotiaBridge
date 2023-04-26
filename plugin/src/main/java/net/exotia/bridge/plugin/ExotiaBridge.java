@@ -6,6 +6,7 @@ import net.exotia.bridge.api.ExotiaBridgeProvider;
 import net.exotia.bridge.api.user.ApiUserService;
 import net.exotia.bridge.plugin.configuration.PluginConfiguration;
 import net.exotia.bridge.plugin.factory.ConfigurationFactory;
+import net.exotia.bridge.plugin.listeners.PlayerJoinListener;
 import net.exotia.bridge.shared.Bridge;
 import net.exotia.bridge.shared.services.UserService;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -23,8 +24,8 @@ public final class ExotiaBridge extends JavaPlugin implements ExotiaBridgeInstan
         this.setupConfiguration();
         this.setupBridge();
 
+        this.getServer().getPluginManager().registerEvents(this.injector.createInstance(PlayerJoinListener.class), this);
         ExotiaBridgeProvider.setProvider(this);
-        //this.getServer().getPluginManager().registerEvents(this.injector.createInstance(PlayerJoinListener.class), this);
     }
 
     @Override

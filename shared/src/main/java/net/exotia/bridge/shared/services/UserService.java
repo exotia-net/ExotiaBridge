@@ -1,6 +1,7 @@
 package net.exotia.bridge.shared.services;
 
 import lombok.SneakyThrows;
+import net.exotia.bridge.api.user.ApiUser;
 import net.exotia.bridge.api.user.ApiUserService;
 import net.exotia.bridge.shared.ApiConfiguration;
 import net.exotia.bridge.shared.Bridge;
@@ -12,11 +13,9 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static net.exotia.bridge.shared.Endpoints.*;
 import static net.exotia.bridge.shared.utils.CipherUtil.encrypt;
@@ -33,7 +32,8 @@ public class UserService implements ApiUserService {
         this.configuration = apiConfiguration;
     }
 
-    private final List<User> users = new ArrayList<>();
+    //private final HashMap<UUID, User> users = new HashMap<>();
+    private List<User> users = new ArrayList<>();
 
     public void registerUser(User user) {
         if (this.getUser(user.getUniqueId()) != null) return;
@@ -43,24 +43,29 @@ public class UserService implements ApiUserService {
     @Override
     public User getUser(UUID uniqueId) {
         return this.users.stream()
-                .filter(user -> user.getUniqueId() == uniqueId)
+                .filter(user -> user.getUniqueId().equals(uniqueId))
                 .findFirst().orElse(null);
     }
 
+    public List<User> getUsers() {
+        return this.users;
+    }
     public void isAuthorized(UUID uniqueId, String username, Callback callback) {
         this.bridge.async(() -> {
             AtomicBoolean atomicBoolean = new AtomicBoolean(false);
+            AtomicReference<User> userAtomicReference = new AtomicReference<User>(null);
             this.httpService.get(getUri(AUTH_ME, this.configuration), UserResponse.class, ((userResponse, result) -> {
                 if (result.getResponse().code() == 200) {
-                    this.registerUser(User.builder()
-                            .uniqueId(userResponse.getUuid())
+                    userAtomicReference.set(User.builder()
+                            .uuid(userResponse.getUuid())
+                            .nickname(username)
                             .firstIp(userResponse.getFirstIp())
                             .lastIp(userResponse.getLastIp())
                             .build());
                     atomicBoolean.set(true);
                 }
             }), Map.of("ExotiaKey", this.getUserCipher(uniqueId, username)));
-            callback.onSuccess(atomicBoolean.get(), null);
+            callback.onSuccess(atomicBoolean.get(), userAtomicReference.get());
         });
     }
 

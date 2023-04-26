@@ -17,6 +17,7 @@ public class UserPosLoginListener implements Listener {
     @EventHandler
     public void onLogin(UserPreLoginEvent event) {
         ProxiedPlayer player = event.getProxiedPlayer();
+        if (this.userService.getUser(player.getUniqueId()) != null) return;
         this.userService.isAuthorized(player.getUniqueId(), player.getName(), (result, msg) -> {
             if (result) return;
             this.userService.signUp(player.getUniqueId(), player.getName(), (isSuccess, responseMessage) -> {
