@@ -7,7 +7,7 @@ public abstract class Bridge {
     private HttpService httpService;
 
     public abstract ApiConfiguration getApiConfiguration();
-    public abstract void async(Runnable runnable);
+    public abstract void runAsync(Runnable runnable);
 
     public UserService getUserService() {
         return new UserService(this.getApiConfiguration(), this);

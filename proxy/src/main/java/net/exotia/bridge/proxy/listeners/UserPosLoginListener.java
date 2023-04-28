@@ -10,6 +10,9 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import pl.minecodes.minelogin.bungee.api.event.pre.UserPreLoginEvent;
 
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+
 public class UserPosLoginListener implements Listener {
     @Inject private UserService userService;
     @Inject private PluginConfiguration configuration;
@@ -17,10 +20,12 @@ public class UserPosLoginListener implements Listener {
     @EventHandler
     public void onLogin(UserPreLoginEvent event) {
         ProxiedPlayer player = event.getProxiedPlayer();
+        SocketAddress address = player.getSocketAddress();
+        String ip = address instanceof InetSocketAddress ? ((InetSocketAddress) address).getHostString() : "0.0.0.0";
         if (this.userService.getUser(player.getUniqueId()) != null) return;
-        this.userService.isAuthorized(player.getUniqueId(), player.getName(), (result, msg) -> {
+        this.userService.isAuthorized(player.getUniqueId(), player.getName(), ip, (result, msg) -> {
             if (result) return;
-            this.userService.signUp(player.getUniqueId(), player.getName(), (isSuccess, responseMessage) -> {
+            this.userService.signUp(player.getUniqueId(), player.getName(), ip, (isSuccess, responseMessage) -> {
                 String message = isSuccess ? this.configuration.getFormattedUserCreated() : this.configuration.getFormattedError(0, responseMessage);
                 player.disconnect(new TextComponent(MessageService.getFormattedMessage(message)));
             });

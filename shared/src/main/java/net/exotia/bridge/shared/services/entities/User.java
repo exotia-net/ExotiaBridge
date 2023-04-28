@@ -11,6 +11,7 @@ public class User implements ApiUser {
     private String nickname;
     private String firstIp;
     private String lastIp;
+    private Update update;
 
     @Override
     public UUID getUniqueId() {
@@ -30,5 +31,8 @@ public class User implements ApiUser {
     @Override
     public String getNickname() {
         return this.nickname;
+    }
+    public Update getUpdate() {
+        return this.update;
     }
 }

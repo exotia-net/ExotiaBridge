@@ -5,17 +5,14 @@ import net.exotia.bridge.api.user.ApiUser;
 import net.exotia.bridge.api.user.ApiUserService;
 import net.exotia.bridge.shared.ApiConfiguration;
 import net.exotia.bridge.shared.Bridge;
-import net.exotia.bridge.shared.http.Callback;
 import net.exotia.bridge.shared.http.HttpService;
 import net.exotia.bridge.shared.services.entities.User;
 import net.exotia.bridge.shared.services.responses.UserResponse;
 import okhttp3.Response;
-import okhttp3.ResponseBody;
-
-import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 import static net.exotia.bridge.shared.Endpoints.*;
 import static net.exotia.bridge.shared.utils.CipherUtil.encrypt;
@@ -32,8 +29,7 @@ public class UserService implements ApiUserService {
         this.configuration = apiConfiguration;
     }
 
-    //private final HashMap<UUID, User> users = new HashMap<>();
-    private List<User> users = new ArrayList<>();
+    private Set<User> users = new HashSet<>();
 
     public void registerUser(User user) {
         if (this.getUser(user.getUniqueId()) != null) return;
@@ -47,55 +43,49 @@ public class UserService implements ApiUserService {
                 .findFirst().orElse(null);
     }
 
-    public List<User> getUsers() {
-        return this.users;
+    @Override
+    public Set<ApiUser> getUsers() {
+        return Collections.unmodifiableSet(this.users);
     }
-    public void isAuthorized(UUID uniqueId, String username, Callback callback) {
-        this.bridge.async(() -> {
-            AtomicBoolean atomicBoolean = new AtomicBoolean(false);
-            AtomicReference<User> userAtomicReference = new AtomicReference<User>(null);
+
+    public void isAuthorized(UUID uniqueId, String username, String ip, BiConsumer<Boolean, String> function) {
+        this.bridge.runAsync(() -> {
             this.httpService.get(getUri(AUTH_ME, this.configuration), UserResponse.class, ((userResponse, result) -> {
                 if (result.getResponse().code() == 200) {
-                    userAtomicReference.set(User.builder()
+                    this.registerUser(User.builder()
                             .uuid(userResponse.getUuid())
                             .nickname(username)
                             .firstIp(userResponse.getFirstIp())
                             .lastIp(userResponse.getLastIp())
                             .build());
-                    atomicBoolean.set(true);
                 }
-            }), Map.of("ExotiaKey", this.getUserCipher(uniqueId, username)));
-            callback.onSuccess(atomicBoolean.get(), userAtomicReference.get());
+                function.accept(result.getResponse().code() == 200, result.getResponseString());
+            }), Map.of(AUTH_HEADER, this.getUserCipher(uniqueId, username, ip)));
+        });
+    }
+    public void signUp(UUID uniqueId, String username, String ip, BiConsumer<Boolean, String> function) {
+        this.bridge.runAsync(() -> {
+            this.httpService.post(getUri(AUTH_SIGNUP, this.configuration), null, (o, result) -> {
+                Response response = result.getResponse();
+                function.accept(response.code() == 200 || response.code() == 201, result.getResponseString());
+            }, Map.of(AUTH_HEADER, this.getUserCipher(uniqueId, username, ip)));
         });
     }
 
-    public void signUp(UUID uniqueId, String username, Callback callback) {
-        this.bridge.async(() -> {
-            this.httpService.post(getUri(AUTH_SIGNUP, this.configuration), null, (o, result) -> {
-                Response response = result.getResponse();
-                callback.onSuccess(response.code() == 200 || response.code() == 201, result.getResponseString());
-            }, Map.of("ExotiaKey", this.getUserCipher(uniqueId, username)));
-        });
-        System.out.println(this.getUserCipher(uniqueId, username));
+    public CompletableFuture<Set<User>> getUsersToUpdate() {
+        return CompletableFuture.supplyAsync(() -> this.users.stream()
+                .filter(user -> user.getUpdate().isUpdatable())
+                .collect(Collectors.toSet()));
     }
 
     public void save(User user) {
 
     }
 
-    private String getResponseBody(Response response) {
-        try {
-            ResponseBody responseBodyCopy = response.peekBody(Long.MAX_VALUE);
-            return responseBodyCopy.string();
-        } catch (IOException e) {
-            return null;
-        }
-    }
-
     @Override
     @SneakyThrows
-    public String getUserCipher(UUID uniqueId, String username) {
+    public String getUserCipher(UUID uniqueId, String username, String ip) {
         byte[] key = sha256(this.configuration.getApiKey());
-        return encrypt(String.join("|", uniqueId.toString(), "0.0.0.0", username), key);
+        return encrypt(String.join("|", uniqueId.toString(), ip, username), key);
     }
 }

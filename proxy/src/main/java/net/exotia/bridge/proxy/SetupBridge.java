@@ -15,7 +15,7 @@ public class SetupBridge extends Bridge {
         return this.configuration;
     }
     @Override
-    public void async(Runnable runnable) {
+    public void runAsync(Runnable runnable) {
         this.plugin.getProxy().getScheduler().runAsync(this.plugin, runnable);
     }
 }

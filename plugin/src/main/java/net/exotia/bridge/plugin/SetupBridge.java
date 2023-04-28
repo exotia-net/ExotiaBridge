@@ -16,7 +16,7 @@ public class SetupBridge extends Bridge {
         return this.configuration;
     }
     @Override
-    public void async(Runnable runnable) {
+    public void runAsync(Runnable runnable) {
         Bukkit.getScheduler().runTaskAsynchronously(this.plugin, runnable);
     }
 }
