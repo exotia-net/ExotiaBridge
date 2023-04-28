@@ -5,18 +5,20 @@ import net.exotia.bridge.api.user.ApiUser;
 import net.exotia.bridge.api.user.ApiUserService;
 import net.exotia.bridge.shared.ApiConfiguration;
 import net.exotia.bridge.shared.Bridge;
+import net.exotia.bridge.shared.exceptions.ServerIdIsInvalidException;
 import net.exotia.bridge.shared.http.HttpService;
+import net.exotia.bridge.shared.services.entities.ExotiaPlayer;
 import net.exotia.bridge.shared.services.entities.User;
+import net.exotia.bridge.shared.services.responses.EconomyResponse;
 import net.exotia.bridge.shared.services.responses.UserResponse;
 import okhttp3.Response;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 import static net.exotia.bridge.shared.Endpoints.*;
-import static net.exotia.bridge.shared.utils.CipherUtil.encrypt;
-import static net.exotia.bridge.shared.utils.CipherUtil.sha256;
 
 public class UserService implements ApiUserService {
     private HttpService httpService;
@@ -48,27 +50,40 @@ public class UserService implements ApiUserService {
         return Collections.unmodifiableSet(this.users);
     }
 
-    public void isAuthorized(UUID uniqueId, String username, String ip, BiConsumer<Boolean, String> function) {
+    public void isAuthorized(ExotiaPlayer exotiaPlayer, BiConsumer<Boolean, User> function) {
         this.bridge.runAsync(() -> {
             this.httpService.get(getUri(AUTH_ME, this.configuration), UserResponse.class, ((userResponse, result) -> {
+                User user = null;
                 if (result.getResponse().code() == 200) {
-                    this.registerUser(User.builder()
+                    user = User.builder()
                             .uuid(userResponse.getUuid())
-                            .nickname(username)
+                            .nickname(exotiaPlayer.getUsername())
                             .firstIp(userResponse.getFirstIp())
                             .lastIp(userResponse.getLastIp())
-                            .build());
+                            .build();
+                    this.registerUser(user);
                 }
-                function.accept(result.getResponse().code() == 200, result.getResponseString());
-            }), Map.of(AUTH_HEADER, this.getUserCipher(uniqueId, username, ip)));
+                function.accept(result.getResponse().code() == 200, user);
+            }), Map.of(AUTH_HEADER, exotiaPlayer.getCipher(this.configuration)));
         });
     }
-    public void signUp(UUID uniqueId, String username, String ip, BiConsumer<Boolean, String> function) {
+    public void signUp(ExotiaPlayer exotiaPlayer, BiConsumer<Boolean, String> function) {
         this.bridge.runAsync(() -> {
             this.httpService.post(getUri(AUTH_SIGNUP, this.configuration), null, (o, result) -> {
                 Response response = result.getResponse();
                 function.accept(response.code() == 200 || response.code() == 201, result.getResponseString());
-            }, Map.of(AUTH_HEADER, this.getUserCipher(uniqueId, username, ip)));
+            }, Map.of(AUTH_HEADER, exotiaPlayer.getCipher(this.configuration)));
+        });
+    }
+    public CompletableFuture<Integer> getPlayerBalance(ExotiaPlayer exotiaPlayer) {
+        return CompletableFuture.supplyAsync(() -> {
+            AtomicInteger atomicInteger = new AtomicInteger(0);
+            this.httpService.get(getUri(GET_PLAYER_BALANCE, this.configuration), EconomyResponse.class, ((economyResponse, result) -> {
+                Response response = result.getResponse();
+                if (response.code() != 200) throw new ServerIdIsInvalidException(this.configuration.getServerId());
+                atomicInteger.set(economyResponse.getBalance());
+            }), Map.of(AUTH_HEADER, exotiaPlayer.getCipher(this.configuration)));
+           return atomicInteger.get();
         });
     }
 
@@ -80,12 +95,5 @@ public class UserService implements ApiUserService {
 
     public void save(User user) {
 
-    }
-
-    @Override
-    @SneakyThrows
-    public String getUserCipher(UUID uniqueId, String username, String ip) {
-        byte[] key = sha256(this.configuration.getApiKey());
-        return encrypt(String.join("|", uniqueId.toString(), ip, username), key);
     }
 }

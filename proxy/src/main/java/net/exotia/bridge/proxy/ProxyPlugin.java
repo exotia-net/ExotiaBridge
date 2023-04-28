@@ -5,7 +5,7 @@ import net.exotia.bridge.api.ExotiaBridgeInstance;
 import net.exotia.bridge.api.ExotiaBridgeProvider;
 import net.exotia.bridge.api.user.ApiUserService;
 import net.exotia.bridge.proxy.configuration.PluginConfiguration;
-import net.exotia.bridge.proxy.listeners.UserPosLoginListener;
+import net.exotia.bridge.proxy.listeners.UserPostLoginListener;
 import net.exotia.bridge.shared.Bridge;
 import net.exotia.bridge.shared.services.UserService;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -23,7 +23,7 @@ public final class ProxyPlugin extends Plugin implements ExotiaBridgeInstance {
         this.setupConfiguration();
         this.setupBridge();
 
-        this.getProxy().getPluginManager().registerListener(this, this.injector.createInstance(UserPosLoginListener.class));
+        this.getProxy().getPluginManager().registerListener(this, this.injector.createInstance(UserPostLoginListener.class));
         ExotiaBridgeProvider.setProvider(this);
     }
 

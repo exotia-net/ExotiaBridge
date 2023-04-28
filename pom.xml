@@ -13,6 +13,7 @@
         <module>plugin</module>
         <module>proxy</module>
         <module>shared</module>
+        <module>messaging-api</module>
     </modules>
 
 <!--    <properties>-->
