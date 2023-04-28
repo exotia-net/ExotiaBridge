@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.exotia.bridge</groupId>
-    <artifactId>proxy</artifactId>
+    <artifactId>proxy-plugin</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>proxy</name>
+    <name>proxy-plugin</name>
 
     <properties>
         <java.version>16</java.version>
