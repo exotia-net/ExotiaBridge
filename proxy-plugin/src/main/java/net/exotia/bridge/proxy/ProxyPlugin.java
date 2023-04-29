@@ -4,7 +4,12 @@ import eu.okaeri.injector.OkaeriInjector;
 import net.exotia.bridge.api.ExotiaBridgeInstance;
 import net.exotia.bridge.api.ExotiaBridgeProvider;
 import net.exotia.bridge.api.user.ApiUserService;
+import net.exotia.bridge.messaging_api.MessagingPackCodec;
+import net.exotia.bridge.messaging_api.MessagingService;
+import net.exotia.bridge.messaging_api.channel.MessagingChannels;
 import net.exotia.bridge.proxy.configuration.PluginConfiguration;
+import net.exotia.bridge.proxy.handlers.UserNeedUpdatePacketHandler;
+import net.exotia.bridge.proxy.listeners.BungeePacketHandler;
 import net.exotia.bridge.proxy.listeners.UserPostLoginListener;
 import net.exotia.bridge.shared.Bridge;
 import net.exotia.bridge.shared.services.UserService;
@@ -23,7 +28,18 @@ public final class ProxyPlugin extends Plugin implements ExotiaBridgeInstance {
         this.setupConfiguration();
         this.setupBridge();
 
+        this.injector.registerInjectable(new MessagingPackCodec());
+        MessagingService messagingService = new MessagingService();
+        this.injector.registerInjectable(messagingService);
+
+        messagingService.addListener(MessagingChannels.USER_NEED_UPDATE, this.injector.createInstance(UserNeedUpdatePacketHandler.class));
+
+        for (String key : messagingService.getHandlers().keys()) {
+            this.getProxy().registerChannel(key);
+        }
+
         this.getProxy().getPluginManager().registerListener(this, this.injector.createInstance(UserPostLoginListener.class));
+        this.getProxy().getPluginManager().registerListener(this, this.injector.createInstance(BungeePacketHandler.class));
         ExotiaBridgeProvider.setProvider(this);
     }
 

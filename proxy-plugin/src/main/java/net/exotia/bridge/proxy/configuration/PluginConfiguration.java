@@ -22,5 +22,10 @@ public class PluginConfiguration implements ApiConfiguration {
     public String getFormattedUserCreated() {
         return String.join("\n", this.userCreatedMessage);
     }
+
+    @Override
+    public boolean isProxyServer() {
+        return true;
+    }
 }
 

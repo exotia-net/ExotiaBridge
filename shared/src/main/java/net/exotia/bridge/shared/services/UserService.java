@@ -1,6 +1,5 @@
 package net.exotia.bridge.shared.services;
 
-import lombok.SneakyThrows;
 import net.exotia.bridge.api.user.ApiUser;
 import net.exotia.bridge.api.user.ApiUserService;
 import net.exotia.bridge.shared.ApiConfiguration;
@@ -76,13 +75,18 @@ public class UserService implements ApiUserService {
         });
     }
     public CompletableFuture<Integer> getPlayerBalance(ExotiaPlayer exotiaPlayer) {
+        System.out.println("=================[ Request1 ]===============");
         return CompletableFuture.supplyAsync(() -> {
+            System.out.println("=================[ Request2 ]===============");
             AtomicInteger atomicInteger = new AtomicInteger(0);
             this.httpService.get(getUri(GET_PLAYER_BALANCE, this.configuration), EconomyResponse.class, ((economyResponse, result) -> {
                 Response response = result.getResponse();
+                System.out.println("=================[ Request3 ]===============");
+                System.out.println(response.code());
                 if (response.code() != 200) throw new ServerIdIsInvalidException(this.configuration.getServerId());
                 atomicInteger.set(economyResponse.getBalance());
             }), Map.of(AUTH_HEADER, exotiaPlayer.getCipher(this.configuration)));
+            System.out.println("================================");
            return atomicInteger.get();
         });
     }

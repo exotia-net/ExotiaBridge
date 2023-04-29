@@ -4,4 +4,5 @@ public interface ApiConfiguration {
     String getServerId();
     String getBaseUrl();
     String getApiKey();
+    boolean isProxyServer();
 }

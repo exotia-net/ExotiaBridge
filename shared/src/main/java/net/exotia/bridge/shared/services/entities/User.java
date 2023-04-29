@@ -42,6 +42,9 @@ public class User implements ApiUser {
     public Update getUpdate() {
         return this.update;
     }
+    public int getBalance() {
+        return this.balance;
+    }
 
     public ExotiaPlayer getExotiaPlayer() {
         return ExotiaPlayer.builder()
