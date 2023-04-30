@@ -19,7 +19,6 @@ public class ExotiaPlayer {
     private String username;
     private String ip;
 
-
     public String getUniqueIdString() {
         return this.uniqueId.toString();
     }

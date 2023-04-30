@@ -42,6 +42,8 @@ public class User implements ApiUser {
     public Update getUpdate() {
         return this.update;
     }
+
+    @Override
     public int getBalance() {
         return this.balance;
     }

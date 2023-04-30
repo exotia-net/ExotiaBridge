@@ -19,6 +19,23 @@ public class HttpService {
         return this.httpClient;
     }
 
+    public <T> T get(String uri, Class<T> tClass, Map<String, String> headers){
+        Request.Builder builder = new Request.Builder()
+                .url(uri)
+                .get()
+                .addHeader("Content-Type", "application/json");
+
+        if (headers != null) headers.forEach(builder::addHeader);
+        Request request = builder.build();
+        try (Response response = this.httpClient.newCall(request).execute()) {
+            assert response.body() != null;
+            String responseString = response.body().string();
+            return this.gson.fromJson(responseString, tClass);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public <T> void get(String uri, Class<T> tClass, BiConsumer<T, Result> function, Map<String, String> headers){
         RequestResult result = this.sendRequest(HttpMethod.GET, uri, null, tClass, headers);
         function.accept((T) result.getObject(), new Result(result.getResponse(), result.getResponseString()));

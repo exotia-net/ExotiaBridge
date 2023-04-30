@@ -11,6 +11,7 @@ import net.exotia.bridge.proxy.configuration.PluginConfiguration;
 import net.exotia.bridge.proxy.handlers.UserNeedUpdatePacketHandler;
 import net.exotia.bridge.proxy.listeners.BungeePacketHandler;
 import net.exotia.bridge.proxy.listeners.UserPostLoginListener;
+import net.exotia.bridge.proxy.service.UpdatableService;
 import net.exotia.bridge.shared.Bridge;
 import net.exotia.bridge.shared.services.UserService;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -31,6 +32,8 @@ public final class ProxyPlugin extends Plugin implements ExotiaBridgeInstance {
         this.injector.registerInjectable(new MessagingPackCodec());
         MessagingService messagingService = new MessagingService();
         this.injector.registerInjectable(messagingService);
+
+        this.injector.registerInjectable(this.injector.createInstance(UpdatableService.class));
 
         messagingService.addListener(MessagingChannels.USER_NEED_UPDATE, this.injector.createInstance(UserNeedUpdatePacketHandler.class));
 

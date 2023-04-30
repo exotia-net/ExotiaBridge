@@ -7,4 +7,5 @@ public interface ApiUser {
     String getFirstIp();
     String getLastIp();
     String getNickname();
+    int getBalance();
 }
