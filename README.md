@@ -22,7 +22,7 @@ mvn clean package
 ### Installation (gradle)
 ```kotlin
 maven {
-    url = uri("https://repository.exotia.net/<repository>")
+    url = uri("https://repository.exotia.net/releases")
 }
 
 implementation("net.exotia.bridge:api:1.0.1")
