@@ -11,8 +11,6 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/plugin/pom.xml" />
-        <option value="$PROJECT_DIR$/proxy/pom.xml" />
       </list>
     </option>
   </component>

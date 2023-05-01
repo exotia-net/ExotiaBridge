@@ -1,5 +1,7 @@
 package net.exotia.bridge.shared;
 
+import net.exotia.bridge.api.ExotiaBridgeInstance;
+import net.exotia.bridge.api.ExotiaBridgeProvider;
 import net.exotia.bridge.shared.http.HttpService;
 import net.exotia.bridge.shared.services.UserService;
 
