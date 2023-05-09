@@ -3,6 +3,7 @@ package net.exotia.bridge.shared;
 import net.exotia.bridge.api.ExotiaBridgeInstance;
 import net.exotia.bridge.api.ExotiaBridgeProvider;
 import net.exotia.bridge.shared.http.HttpService;
+import net.exotia.bridge.shared.messaging.PluginMessagingService;
 import net.exotia.bridge.shared.services.UserService;
 
 public abstract class Bridge {
@@ -11,8 +12,8 @@ public abstract class Bridge {
     public abstract ApiConfiguration getApiConfiguration();
     public abstract void runAsync(Runnable runnable);
 
-    public UserService getUserService() {
-        return new UserService(this.getApiConfiguration(), this);
+    public UserService getUserService(PluginMessagingService pluginMessagingService) {
+        return new UserService(this.getApiConfiguration(), this, pluginMessagingService);
     }
     public HttpService getHttpService() {
         if (this.httpService == null) this.httpService = new HttpService();

@@ -2,7 +2,8 @@ package net.exotia.bridge.plugin.listeners;
 
 import eu.okaeri.injector.annotation.Inject;
 import net.exotia.bridge.messaging_api.channel.MessagingChannels;
-import net.exotia.bridge.messaging_api.packets.spigot.UserNeedUpdatePacket;
+import net.exotia.bridge.messaging_api.packets.UserNeedUpdatePacket;
+import net.exotia.bridge.plugin.configuration.PluginConfiguration;
 import net.exotia.bridge.plugin.service.SpigotMessagingService;
 import net.exotia.bridge.shared.services.UserService;
 import net.exotia.bridge.shared.services.entities.ExotiaPlayer;
@@ -13,6 +14,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 public class PlayerJoinListener implements Listener {
     @Inject private UserService userService;
+    @Inject private PluginConfiguration configuration;
     @Inject private SpigotMessagingService spigotMessagingService;
 
     @EventHandler
@@ -26,7 +28,10 @@ public class PlayerJoinListener implements Listener {
                 System.out.println("===========");
                 System.out.println(balance);
                 System.out.println("===========");
-                this.spigotMessagingService.sendMessageData(player, MessagingChannels.USER_NEED_UPDATE, new UserNeedUpdatePacket(user.getFirstIp() + " | " + user.getBalance()));
+//                this.spigotMessagingService.sendMessageData(player,
+//                        MessagingChannels.USER_NEED_UPDATE,
+//                        new UserNeedUpdatePacket(this.configuration.getServerId(), user.getUniqueId().toString(), user.getBalance())
+//                );
             });
         }));
     }

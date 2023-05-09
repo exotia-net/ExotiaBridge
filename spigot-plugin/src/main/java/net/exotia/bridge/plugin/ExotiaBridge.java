@@ -19,6 +19,7 @@ public final class ExotiaBridge extends JavaPlugin implements ExotiaBridgeInstan
     private final OkaeriInjector injector = OkaeriInjector.create();
     private Bridge bridge;
     private UserService userService;
+    private SpigotMessagingService spigotMessagingService;
 
     @Override
     public void onEnable() {
@@ -26,8 +27,8 @@ public final class ExotiaBridge extends JavaPlugin implements ExotiaBridgeInstan
         this.injector.registerInjectable(this.injector);
 
         this.setupConfiguration();
-        this.setupBridge();
         this.setupMessagingService();
+        this.setupBridge();
 
         this.getServer().getPluginManager().registerEvents(this.injector.createInstance(PlayerJoinListener.class), this);
         ExotiaBridgeProvider.setProvider(this);
@@ -40,7 +41,7 @@ public final class ExotiaBridge extends JavaPlugin implements ExotiaBridgeInstan
 
     private void setupBridge() {
         this.bridge = this.injector.createInstance(SetupBridge.class);
-        this.userService = this.bridge.getUserService();
+        this.userService = this.bridge.getUserService(this.spigotMessagingService);
         this.injector.registerInjectable(this.userService);
     }
     private void setupConfiguration() {
@@ -59,7 +60,9 @@ public final class ExotiaBridge extends JavaPlugin implements ExotiaBridgeInstan
             this.getServer().getMessenger().registerIncomingPluginChannel(this, key, spigotPacketHandler);
         }
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-        this.injector.registerInjectable(this.injector.createInstance(SpigotMessagingService.class));
+        this.spigotMessagingService = this.injector.createInstance(SpigotMessagingService.class);
+
+        this.injector.registerInjectable(this.spigotMessagingService);
     }
 
     @Override

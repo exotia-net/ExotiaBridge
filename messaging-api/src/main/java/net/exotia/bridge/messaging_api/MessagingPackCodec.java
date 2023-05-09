@@ -27,14 +27,12 @@ public class MessagingPackCodec {
                 .enable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY);
         this.objectMapper.registerSubtypes(MessagingPacket.class);
     }
-
     public MessagingPackCodec(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
     public <T> T decode(byte[] bytes, Class<T> clazz) {
         if(bytes == null) return null;
-
         try {
             return this.objectMapper.readValue(bytes, clazz);
         } catch (Exception e) {
@@ -42,14 +40,11 @@ public class MessagingPackCodec {
         }
         return null;
     }
-
     public <T> T decode(byte[] bytes) {
         return (T) this.decode(bytes, MessagingPacket.class);
     }
-
     public byte[] encode(Object object) {
         if(object == null) return null;
-
         try {
             return this.objectMapper.writeValueAsBytes(object);
         } catch (Exception e) {
@@ -57,7 +52,6 @@ public class MessagingPackCodec {
         }
         return new byte[0];
     }
-
     public ObjectMapper getObjectMapper() {
         return this.objectMapper;
     }

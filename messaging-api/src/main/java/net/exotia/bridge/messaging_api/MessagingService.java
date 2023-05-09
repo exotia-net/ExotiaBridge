@@ -18,7 +18,6 @@ public class MessagingService {
         if(this.subscribedChannels.contains(channel)) {
             return;
         }
-
         this.subscribeConsumer.accept(channel);
         this.subscribedChannels.add(channel);
     }
@@ -26,20 +25,16 @@ public class MessagingService {
     public void setConsumer(Consumer<String> subscribeConsumer) {
         this.subscribeConsumer = subscribeConsumer;
     }
-
     public void addListener(String channel, MessagingPacketHandler<?> handler) {
         this.handlers.put(channel, handler);
     }
-
     public Collection<MessagingPacketHandler<?>> getHandler(String channel) {
         if (!this.handlers.containsKey(channel)) {
             return Collections.emptyList();
         }
-
         return this.handlers.get(channel);
     }
-
     public Multimap<String, MessagingPacketHandler<?>> getHandlers() {
-        return handlers;
+        return this.handlers;
     }
 }

@@ -7,14 +7,17 @@ import net.exotia.bridge.api.user.ApiUserService;
 import net.exotia.bridge.messaging_api.MessagingPackCodec;
 import net.exotia.bridge.messaging_api.MessagingService;
 import net.exotia.bridge.messaging_api.channel.MessagingChannels;
+import net.exotia.bridge.proxy.client.EconomyListener;
 import net.exotia.bridge.proxy.configuration.PluginConfiguration;
 import net.exotia.bridge.proxy.handlers.UserNeedUpdatePacketHandler;
 import net.exotia.bridge.proxy.listeners.BungeePacketHandler;
 import net.exotia.bridge.proxy.listeners.UserPostLoginListener;
 import net.exotia.bridge.proxy.service.UpdatableService;
 import net.exotia.bridge.shared.Bridge;
+import net.exotia.bridge.shared.http.HttpService;
 import net.exotia.bridge.shared.services.UserService;
 import net.md_5.bungee.api.plugin.Plugin;
+import okhttp3.WebSocket;
 
 public final class ProxyPlugin extends Plugin implements ExotiaBridgeInstance {
     private final OkaeriInjector injector = OkaeriInjector.create();
@@ -25,6 +28,7 @@ public final class ProxyPlugin extends Plugin implements ExotiaBridgeInstance {
     public void onEnable() {
         this.injector.registerInjectable(this);
         this.injector.registerInjectable(this.injector);
+        this.injector.registerInjectable(this.getLogger());
 
         this.setupConfiguration();
         this.setupBridge();
@@ -53,7 +57,12 @@ public final class ProxyPlugin extends Plugin implements ExotiaBridgeInstance {
 
     private void setupBridge() {
         this.bridge = this.injector.createInstance(SetupBridge.class);
-        this.userService = this.bridge.getUserService();
+        this.userService = this.bridge.getUserService(null);
+
+        HttpService httpService = this.bridge.getHttpService();
+        WebSocket webSocket = httpService.prepareWebSocketConnection(this.bridge.getApiConfiguration(), this.injector.createInstance(EconomyListener.class));
+
+        this.injector.registerInjectable(webSocket);
         this.injector.registerInjectable(this.userService);
     }
     private void setupConfiguration() {

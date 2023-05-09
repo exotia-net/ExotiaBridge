@@ -6,6 +6,8 @@ public class Endpoints {
     public static final String AUTH_SIGNUP = "/auth/signUp";
     public static final String GET_PLAYER_BALANCE = "/api/servers/%s";
 
+    public static final String WEBSOCKET = "/ws";
+
     public static String getUri(String endpoint, ApiConfiguration configuration) {
         return String.join("", configuration.getBaseUrl(), String.format(endpoint, configuration.getServerId()));
     }

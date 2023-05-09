@@ -15,7 +15,7 @@ public class UpdateUserTask implements Runnable{
             users.forEach(user -> {
                 user.getUpdate().setUpdatable(false);
                 user.getUpdate().setLast(System.currentTimeMillis());
-                this.userService.save(user);
+                //this.userService.save(user);
             });
         });
     }

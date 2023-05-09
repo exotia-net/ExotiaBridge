@@ -2,9 +2,12 @@ package net.exotia.bridge.shared.services;
 
 import net.exotia.bridge.api.user.ApiUser;
 import net.exotia.bridge.api.user.ApiUserService;
+import net.exotia.bridge.messaging_api.channel.MessagingChannels;
+import net.exotia.bridge.messaging_api.packets.UserNeedUpdatePacket;
 import net.exotia.bridge.shared.ApiConfiguration;
 import net.exotia.bridge.shared.Bridge;
 import net.exotia.bridge.shared.http.HttpService;
+import net.exotia.bridge.shared.messaging.PluginMessagingService;
 import net.exotia.bridge.shared.services.entities.ExotiaPlayer;
 import net.exotia.bridge.shared.services.entities.User;
 import net.exotia.bridge.shared.services.responses.EconomyResponse;
@@ -21,11 +24,13 @@ public class UserService implements ApiUserService {
     private HttpService httpService;
     private ApiConfiguration configuration;
     private Bridge bridge;
+    private PluginMessagingService pluginMessagingService;
 
-    public UserService(ApiConfiguration apiConfiguration, Bridge bridge) {
+    public UserService(ApiConfiguration apiConfiguration, Bridge bridge, PluginMessagingService pluginMessagingService) {
         this.httpService = bridge.getHttpService();
         this.bridge = bridge;
         this.configuration = apiConfiguration;
+        this.pluginMessagingService = pluginMessagingService;
     }
 
     private Set<User> users = new HashSet<>();
@@ -90,6 +95,14 @@ public class UserService implements ApiUserService {
                 .collect(Collectors.toSet()));
     }
 
-    public void save(User user) {}
+    @Override
+    public void saveBalance(ApiUser apiUser) {
+        this.pluginMessagingService.sendMessageData(
+                this.pluginMessagingService.getPlayer(apiUser.getUniqueId()),
+                MessagingChannels.USER_NEED_UPDATE,
+                new UserNeedUpdatePacket(this.configuration.getServerId(), apiUser.getUniqueId().toString(), apiUser.getBalance())
+        );
+    }
+
     public void sendUpdateNotify() {}
 }

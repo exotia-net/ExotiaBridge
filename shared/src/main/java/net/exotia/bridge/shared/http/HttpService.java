@@ -1,14 +1,19 @@
 package net.exotia.bridge.shared.http;
 
 import com.google.gson.Gson;
+import net.exotia.bridge.shared.ApiConfiguration;
 import net.exotia.bridge.shared.http.entities.Dto;
 import net.exotia.bridge.shared.http.entities.RequestResult;
 import net.exotia.bridge.shared.http.entities.Result;
+import net.exotia.bridge.shared.services.entities.ExotiaPlayer;
 import okhttp3.*;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.BiConsumer;
+
+import static net.exotia.bridge.shared.Endpoints.*;
 
 public class HttpService {
     private static final MediaType JSON = MediaType.parse("application/json");
@@ -17,6 +22,20 @@ public class HttpService {
 
     public OkHttpClient getHttpClient() {
         return this.httpClient;
+    }
+
+    public WebSocket prepareWebSocketConnection(ApiConfiguration apiConfiguration, WebSocketListener webSocketListener) {
+        OkHttpClient wsClient = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(this.changeProtocols(getUri(WEBSOCKET, apiConfiguration)))
+                .header(AUTH_HEADER, new ExotiaPlayer(
+                        UUID.fromString("00000000-0000-0000-0000-000000000000"),
+                        "0", "0.0.0.0").getCipher(apiConfiguration))
+                .build();
+        return wsClient.newWebSocket(request, webSocketListener);
+    }
+    private String changeProtocols(String string) {
+        return string.replace("http", "ws").replace("https", "wss");
     }
 
     public <T> T get(String uri, Class<T> tClass, Map<String, String> headers){
