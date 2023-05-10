@@ -18,6 +18,7 @@
     </properties>
 
     <build>
+        <finalName>ExotiaBridge-Spigot-${project.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -1,5 +1,6 @@
 package net.exotia.bridge.proxy;
 
+import eu.okaeri.configs.yaml.bungee.YamlBungeeConfigurer;
 import eu.okaeri.injector.OkaeriInjector;
 import net.exotia.bridge.api.ExotiaBridgeInstance;
 import net.exotia.bridge.api.ExotiaBridgeProvider;
@@ -12,8 +13,8 @@ import net.exotia.bridge.proxy.configuration.PluginConfiguration;
 import net.exotia.bridge.proxy.handlers.UserNeedUpdatePacketHandler;
 import net.exotia.bridge.proxy.listeners.BungeePacketHandler;
 import net.exotia.bridge.proxy.listeners.UserPostLoginListener;
-import net.exotia.bridge.proxy.service.UpdatableService;
 import net.exotia.bridge.shared.Bridge;
+import net.exotia.bridge.shared.factory.ConfigurationFactory;
 import net.exotia.bridge.shared.http.HttpService;
 import net.exotia.bridge.shared.services.UserService;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -37,8 +38,6 @@ public final class ProxyPlugin extends Plugin implements ExotiaBridgeInstance {
         MessagingService messagingService = new MessagingService();
         this.injector.registerInjectable(messagingService);
 
-        this.injector.registerInjectable(this.injector.createInstance(UpdatableService.class));
-
         messagingService.addListener(MessagingChannels.USER_NEED_UPDATE, this.injector.createInstance(UserNeedUpdatePacketHandler.class));
 
         for (String key : messagingService.getHandlers().keys()) {
@@ -48,6 +47,7 @@ public final class ProxyPlugin extends Plugin implements ExotiaBridgeInstance {
         this.getProxy().getPluginManager().registerListener(this, this.injector.createInstance(UserPostLoginListener.class));
         this.getProxy().getPluginManager().registerListener(this, this.injector.createInstance(BungeePacketHandler.class));
         ExotiaBridgeProvider.setProvider(this);
+        this.bridge.pluginLoadedMessage(this.getLogger());
     }
 
     @Override
@@ -65,8 +65,10 @@ public final class ProxyPlugin extends Plugin implements ExotiaBridgeInstance {
         this.injector.registerInjectable(webSocket);
         this.injector.registerInjectable(this.userService);
     }
+
     private void setupConfiguration() {
-        PluginConfiguration pluginConfiguration = new PluginConfiguration();
+        ConfigurationFactory configurationFactory = new ConfigurationFactory(this.getDataFolder(), new YamlBungeeConfigurer());
+        PluginConfiguration pluginConfiguration = configurationFactory.produce(PluginConfiguration.class, "configuration.yml");
         this.injector.registerInjectable(pluginConfiguration);
     }
 

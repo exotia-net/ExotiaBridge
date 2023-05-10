@@ -23,17 +23,16 @@ public class UserPostLoginListener implements Listener {
         ProxiedPlayer player = event.getProxiedPlayer();
         SocketAddress address = player.getSocketAddress();
 
-        ExotiaPlayer exotiaPlayer = ExotiaPlayer.builder()
-                .uniqueId(player.getUniqueId())
-                .username(player.getName())
-                .ip(address instanceof InetSocketAddress ? ((InetSocketAddress) address).getHostString() : "0.0.0.0")
-                .build();
+        ExotiaPlayer exotiaPlayer = new ExotiaPlayer(
+                player.getUniqueId(), player.getName(),
+                address instanceof InetSocketAddress ? ((InetSocketAddress) address).getHostString() : "0.0.0.0"
+        );
 
         if (this.userService.getUser(player.getUniqueId()) != null) return;
         this.userService.isAuthorized(exotiaPlayer, (result, msg) -> {
             if (result) return;
             this.userService.signUp(exotiaPlayer, (isSuccess, responseMessage) -> {
-                String message = isSuccess ? this.configuration.getFormattedUserCreated() : this.configuration.getFormattedError(0, responseMessage);
+                String message = isSuccess ? this.configuration.getUserCreatedMessage() : this.configuration.getApiErrorMessage(0, responseMessage);
                 player.disconnect(new TextComponent(MessageService.getFormattedMessage(message)));
             });
         });

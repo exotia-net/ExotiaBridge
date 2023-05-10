@@ -1,5 +1,7 @@
 package net.exotia.bridge.plugin;
 
+import eu.okaeri.configs.yaml.bukkit.YamlBukkitConfigurer;
+import eu.okaeri.configs.yaml.bukkit.serdes.SerdesBukkit;
 import eu.okaeri.injector.OkaeriInjector;
 import net.exotia.bridge.api.ExotiaBridgeInstance;
 import net.exotia.bridge.api.ExotiaBridgeProvider;
@@ -7,11 +9,11 @@ import net.exotia.bridge.api.user.ApiUserService;
 import net.exotia.bridge.messaging_api.MessagingPackCodec;
 import net.exotia.bridge.messaging_api.MessagingService;
 import net.exotia.bridge.plugin.configuration.PluginConfiguration;
-import net.exotia.bridge.plugin.factory.ConfigurationFactory;
 import net.exotia.bridge.plugin.listeners.PlayerJoinListener;
 import net.exotia.bridge.plugin.packets.SpigotPacketHandler;
 import net.exotia.bridge.plugin.service.SpigotMessagingService;
 import net.exotia.bridge.shared.Bridge;
+import net.exotia.bridge.shared.factory.ConfigurationFactory;
 import net.exotia.bridge.shared.services.UserService;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -31,7 +33,9 @@ public final class ExotiaBridge extends JavaPlugin implements ExotiaBridgeInstan
         this.setupBridge();
 
         this.getServer().getPluginManager().registerEvents(this.injector.createInstance(PlayerJoinListener.class), this);
+
         ExotiaBridgeProvider.setProvider(this);
+        this.bridge.pluginLoadedMessage(this.getLogger());
     }
 
     @Override
@@ -45,7 +49,8 @@ public final class ExotiaBridge extends JavaPlugin implements ExotiaBridgeInstan
         this.injector.registerInjectable(this.userService);
     }
     private void setupConfiguration() {
-        PluginConfiguration pluginConfiguration = new ConfigurationFactory(this.getDataFolder()).produce(PluginConfiguration.class, "configuration.yml");
+        ConfigurationFactory configurationFactory = new ConfigurationFactory(this.getDataFolder(), new YamlBukkitConfigurer(), new SerdesBukkit());
+        PluginConfiguration pluginConfiguration = configurationFactory.produce(PluginConfiguration.class, "configuration.yml");
         this.injector.registerInjectable(pluginConfiguration);
     }
     private void setupMessagingService() {

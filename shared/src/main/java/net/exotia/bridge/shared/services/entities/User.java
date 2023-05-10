@@ -1,13 +1,15 @@
 package net.exotia.bridge.shared.services.entities;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.Setter;
 import net.exotia.bridge.api.user.ApiUser;
 
 import java.util.UUID;
 
-@Builder
+@Getter
 @Setter
+@Builder
 public class User implements ApiUser {
     private UUID uuid;
     private String nickname;
@@ -20,39 +22,12 @@ public class User implements ApiUser {
      */
     private int balance;
 
+    public ExotiaPlayer getExotiaPlayer() {
+        return new ExotiaPlayer(this.uuid, this.nickname, this.lastIp);
+    }
+
     @Override
     public UUID getUniqueId() {
         return this.uuid;
-    }
-
-    @Override
-    public String getFirstIp() {
-        return this.firstIp;
-    }
-
-    @Override
-    public String getLastIp() {
-        return this.lastIp;
-    }
-
-    @Override
-    public String getNickname() {
-        return this.nickname;
-    }
-    public Update getUpdate() {
-        return this.update;
-    }
-
-    @Override
-    public int getBalance() {
-        return this.balance;
-    }
-
-    public ExotiaPlayer getExotiaPlayer() {
-        return ExotiaPlayer.builder()
-                .uniqueId(this.uuid)
-                .username(this.nickname)
-                .ip(this.lastIp)
-                .build();
     }
 }
