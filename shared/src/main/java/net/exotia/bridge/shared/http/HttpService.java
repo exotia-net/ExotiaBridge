@@ -25,7 +25,9 @@ public class HttpService {
     }
 
     public WebSocket prepareWebSocketConnection(ApiConfiguration apiConfiguration, WebSocketListener webSocketListener) {
-        OkHttpClient wsClient = new OkHttpClient();
+        OkHttpClient wsClient = new OkHttpClient.Builder()
+                .retryOnConnectionFailure(true)
+                .build();
         Request request = new Request.Builder()
                 .url(this.changeProtocols(getUri(WEBSOCKET, apiConfiguration)))
                 .header(AUTH_HEADER, new ExotiaPlayer(
