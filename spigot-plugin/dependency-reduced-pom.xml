@@ -33,17 +33,6 @@
             </goals>
           </execution>
         </executions>
-        <configuration>
-          <createDependencyReducedPom>true</createDependencyReducedPom>
-          <filters>
-            <filter>
-              <artifact>*:*</artifact>
-              <excludes>
-                <exclude>**/lombok/*</exclude>
-              </excludes>
-            </filter>
-          </filters>
-        </configuration>
       </plugin>
     </plugins>
   </build>

@@ -4,23 +4,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>net.exotia.bridge</groupId>
-    <artifactId>proxy-plugin</artifactId>
+    <groupId>net.exotia.bridge.spigot</groupId>
+    <artifactId>new-spigot-plugin</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>proxy-plugin</name>
-
+    <name>ExotiaBridge-spigot</name>
 
     <properties>
-        <java.version>16</java.version>
+        <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 
     <build>
-        <finalName>ExotiaBridge-Proxy-${project.version}</finalName>
-        <defaultGoal>clean package</defaultGoal>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -47,7 +43,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
         <resources>
             <resource>
@@ -59,54 +54,21 @@
 
     <repositories>
         <repository>
+            <id>spigotmc-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>reposilite-repository-releases</id>
-            <name>Reposilite Repository</name>
-            <url>https://repository.exotia.net/releases</url>
-        </repository>
-        <repository>
-            <id>okaeri-repo</id>
-            <url>https://storehouse.okaeri.eu/repository/maven-public/</url>
         </repository>
     </repositories>
 
     <dependencies>
         <dependency>
-            <groupId>net.md-5</groupId>
-            <artifactId>bungeecord-api</artifactId>
-            <version>1.19-R0.1-SNAPSHOT</version>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.19.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>pl.minecodes.minelogin</groupId>
-            <artifactId>bungee-api</artifactId>
-            <version>1.3.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>pl.minecodes.minelogin</groupId>
-            <artifactId>api</artifactId>
-            <version>1.3.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>eu.okaeri</groupId>
-            <artifactId>okaeri-configs-yaml-bungee</artifactId>
-            <version>3.3.6</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.exotia.bridge.shared</groupId>
-            <artifactId>shared</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>net.exotia.bridge.messaging_api</groupId>
-            <artifactId>messaging-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

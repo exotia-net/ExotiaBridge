@@ -17,8 +17,8 @@ import static net.exotia.bridge.shared.Endpoints.*;
 
 public class HttpService {
     private static final MediaType JSON = MediaType.parse("application/json");
-    private OkHttpClient httpClient = new OkHttpClient();
-    private Gson gson = new Gson();
+    private final OkHttpClient httpClient = new OkHttpClient();
+    private final Gson gson = new Gson();
 
     public OkHttpClient getHttpClient() {
         return this.httpClient;
@@ -40,10 +40,8 @@ public class HttpService {
         return string.replace("http", "ws").replace("https", "wss");
     }
 
-    public <T> T get(String uri, Class<T> tClass, Map<String, String> headers){
-        Request.Builder builder = new Request.Builder()
-                .url(uri)
-                .get()
+    public <T> HttpResponse<T> get(String uri, Class<T> tClass, Map<String, String> headers){
+        Request.Builder builder = new Request.Builder().url(uri).get()
                 .addHeader("Content-Type", "application/json");
 
         if (headers != null) headers.forEach(builder::addHeader);
@@ -51,7 +49,41 @@ public class HttpService {
         try (Response response = this.httpClient.newCall(request).execute()) {
             assert response.body() != null;
             String responseString = response.body().string();
-            return this.gson.fromJson(responseString, tClass);
+            if (tClass == null) return new HttpResponse<T>(response, (T) "ee");
+            return new HttpResponse<>(response, this.gson.fromJson(responseString, tClass));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public <T1, T2 extends Dto> HttpResponse<T1> post(String uri, Class<T1> responseType, T2 body, Map<String, String> headers) {
+        RequestBody requestBody = RequestBody.create(this.gson.toJson(body), JSON);
+        Request.Builder builder = new Request.Builder().url(uri).post(requestBody)
+                .addHeader("Content-Type", "application/json");
+
+        if (headers != null) headers.forEach(builder::addHeader);
+        Request request = builder.build();
+        try (Response response = this.httpClient.newCall(request).execute()) {
+            assert response.body() != null;
+            String responseString = response.body().string();
+            if (responseType == null) return new HttpResponse<T1>(response, (T1) responseString);
+            return new HttpResponse<>(response, this.gson.fromJson(responseString, responseType));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public <T> HttpResponse<T> post(String uri, Class<T> responseType, Map<String, String> headers) {
+        RequestBody requestBody = RequestBody.create(this.gson.toJson(RequestBody.create(null, new byte[]{})), JSON);
+        Request.Builder builder = new Request.Builder().url(uri).post(requestBody)
+                .addHeader("Content-Type", "application/json");
+
+        if (headers != null) headers.forEach(builder::addHeader);
+        Request request = builder.build();
+        try (Response response = this.httpClient.newCall(request).execute()) {
+            assert response.body() != null;
+            String responseString = response.body().string();
+            if (responseType == null) return new HttpResponse<T>(response, (T) responseString);
+            return new HttpResponse<>(response, this.gson.fromJson(responseString, responseType));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -1,0 +1,3 @@
+name: ExotiaBridge-proxy
+version: '${project.version}'
+main: net.exotia.bridge.proxy.ProxyPlugin

@@ -23,16 +23,7 @@ public class PlayerJoinListener implements Listener {
         if (this.userService.getUser(player.getUniqueId()) != null) return;
 
         this.userService.isAuthorized(new ExotiaPlayer(player.getUniqueId(), player.getName(), "0.0.0.0"), ((aBoolean, user) -> {
-            this.userService.getPlayerBalance(user.getExotiaPlayer()).thenAccept(balance -> {
-                user.setBalance(balance);
-                System.out.println("===========");
-                System.out.println(balance);
-                System.out.println("===========");
-//                this.spigotMessagingService.sendMessageData(player,
-//                        MessagingChannels.USER_NEED_UPDATE,
-//                        new UserNeedUpdatePacket(this.configuration.getServerId(), user.getUniqueId().toString(), user.getBalance())
-//                );
-            });
+            this.userService.getPlayerBalance(user.getExotiaPlayer()).thenAccept(user::setBalance);
         }));
     }
 }

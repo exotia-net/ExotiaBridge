@@ -22,6 +22,11 @@ public class User implements ApiUser {
      */
     private int balance;
 
+    /**
+     * Player wallet balance
+     */
+    private float coins;
+
     public ExotiaPlayer getExotiaPlayer() {
         return new ExotiaPlayer(this.uuid, this.nickname, this.lastIp);
     }

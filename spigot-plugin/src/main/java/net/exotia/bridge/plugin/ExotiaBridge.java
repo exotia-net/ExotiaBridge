@@ -8,7 +8,9 @@ import net.exotia.bridge.api.ExotiaBridgeProvider;
 import net.exotia.bridge.api.user.ApiUserService;
 import net.exotia.bridge.messaging_api.MessagingPackCodec;
 import net.exotia.bridge.messaging_api.MessagingService;
+import net.exotia.bridge.messaging_api.channel.MessagingChannels;
 import net.exotia.bridge.plugin.configuration.PluginConfiguration;
+import net.exotia.bridge.plugin.handlers.UserWalletUpdateHandler;
 import net.exotia.bridge.plugin.listeners.PlayerJoinListener;
 import net.exotia.bridge.plugin.packets.SpigotPacketHandler;
 import net.exotia.bridge.plugin.service.SpigotMessagingService;
@@ -57,7 +59,8 @@ public final class ExotiaBridge extends JavaPlugin implements ExotiaBridgeInstan
         this.injector.registerInjectable(new MessagingPackCodec());
         MessagingService messagingService = new MessagingService();
         this.injector.registerInjectable(messagingService);
-        //messagingService.addListener(MessagingChannels.NEED_UPDATE, this.injector.createInstance(UserNeedUpdatePacketHandler.class));
+
+        messagingService.addListener(MessagingChannels.USER_WALLET_UPDATED, this.injector.createInstance(UserWalletUpdateHandler.class));
 
         SpigotPacketHandler spigotPacketHandler = this.injector.createInstance(SpigotPacketHandler.class);
 

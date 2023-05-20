@@ -1,0 +1,4 @@
+name: ExotiaBridge-spigot
+version: '${project.version}'
+main: net.exotia.bridge.spigot.SpigotPlugin
+api-version: 1.19

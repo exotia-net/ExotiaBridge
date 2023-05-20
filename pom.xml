@@ -9,6 +9,8 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
+        <module>new-proxy-plugin</module>
+        <module>new-spigot-plugin</module>
         <module>spigot-plugin</module>
         <module>proxy-plugin</module>
         <module>shared</module>

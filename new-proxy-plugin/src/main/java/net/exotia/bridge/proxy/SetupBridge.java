@@ -7,7 +7,6 @@ import net.exotia.bridge.shared.Bridge;
 import net.md_5.bungee.api.plugin.Plugin;
 
 public class SetupBridge extends Bridge {
-    @Inject private Plugin plugin;
     @Inject private PluginConfiguration configuration;
 
     @Override
@@ -17,6 +16,6 @@ public class SetupBridge extends Bridge {
 
     @Override
     public void runAsync(Runnable runnable) {
-        this.plugin.getProxy().getScheduler().runAsync(this.plugin, runnable);
+        //this.plugin.getProxy().getScheduler().runAsync(this.plugin, runnable);
     }
 }

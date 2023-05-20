@@ -1,7 +1,11 @@
 package net.exotia.bridge.proxy.listeners;
 
 import eu.okaeri.injector.annotation.Inject;
+import net.exotia.bridge.messaging_api.channel.MessagingChannels;
+import net.exotia.bridge.messaging_api.packets.UpdateWalletPacket;
+import net.exotia.bridge.messaging_api.packets.UserNeedUpdatePacket;
 import net.exotia.bridge.proxy.configuration.PluginConfiguration;
+import net.exotia.bridge.proxy.service.BungeeMessagingService;
 import net.exotia.bridge.shared.messages.MessageService;
 import net.exotia.bridge.shared.services.UserService;
 import net.exotia.bridge.shared.services.entities.ExotiaPlayer;
@@ -17,6 +21,7 @@ import java.net.SocketAddress;
 public class UserPostLoginListener implements Listener {
     @Inject private UserService userService;
     @Inject private PluginConfiguration configuration;
+    @Inject private BungeeMessagingService bungeeMessagingService;
 
     @EventHandler
     public void onLogin(UserPreLoginEvent event) {
@@ -29,8 +34,14 @@ public class UserPostLoginListener implements Listener {
         );
 
         if (this.userService.getUser(player.getUniqueId()) != null) return;
-        this.userService.isAuthorized(exotiaPlayer, (result, msg) -> {
-            if (result) return;
+        this.userService.isAuthorized(exotiaPlayer, (result, user) -> {
+            if (result) {
+                this.userService.getWallet(exotiaPlayer).thenAccept(walletResponse -> {
+                    user.setCoins(walletResponse.getCoins());
+                    this.bungeeMessagingService.sendMessageData(player.getServer(), MessagingChannels.USER_WALLET_UPDATED, new UpdateWalletPacket(exotiaPlayer.getUniqueIdString(), user.getCoins()));
+                });
+                return;
+            }
             this.userService.signUp(exotiaPlayer, (isSuccess, responseMessage) -> {
                 String message = isSuccess ? this.configuration.getUserCreatedMessage() : this.configuration.getApiErrorMessage(0, responseMessage);
                 player.disconnect(new TextComponent(MessageService.getFormattedMessage(message)));

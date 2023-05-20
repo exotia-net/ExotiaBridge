@@ -1,13 +1,8 @@
 package net.exotia.bridge.shared;
 
-import net.exotia.bridge.api.ExotiaBridgeInstance;
-import net.exotia.bridge.api.ExotiaBridgeProvider;
 import net.exotia.bridge.shared.http.HttpService;
-import net.exotia.bridge.shared.messages.MessageService;
 import net.exotia.bridge.shared.messaging.PluginMessagingService;
 import net.exotia.bridge.shared.services.UserService;
-
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
