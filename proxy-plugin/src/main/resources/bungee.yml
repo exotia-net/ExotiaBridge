@@ -1,5 +1,0 @@
-name: ExotiaBridge
-version: '${project.version}'
-main: net.exotia.bridge.proxy.ProxyPlugin
-depends:
-  - mineLogin

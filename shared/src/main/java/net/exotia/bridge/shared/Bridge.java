@@ -14,8 +14,8 @@ public abstract class Bridge {
     public abstract ApiConfiguration getApiConfiguration();
     public abstract void runAsync(Runnable runnable);
 
-    public UserService getUserService(PluginMessagingService pluginMessagingService) {
-        return new UserService(this.getApiConfiguration(), this, pluginMessagingService);
+    public UserService getUserService() {
+        return new UserService(this.getApiConfiguration(), this);
     }
     public HttpService getHttpService() {
         if (this.httpService == null) this.httpService = new HttpService();

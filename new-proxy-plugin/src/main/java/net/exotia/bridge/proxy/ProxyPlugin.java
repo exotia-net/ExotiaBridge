@@ -34,7 +34,7 @@ public final class ProxyPlugin extends Plugin {
 
     private void setupBridge() {
         this.bridge = this.injector.createInstance(SetupBridge.class);
-        this.userService = this.bridge.getUserService(null);
+        this.userService = this.bridge.getUserService();
         this.injector.registerInjectable(this.userService);
 
 //        HttpService httpService = this.bridge.getHttpService();

@@ -6,6 +6,7 @@ import eu.okaeri.injector.annotation.PostConstruct;
 import net.exotia.bridge.shared.services.UserService;
 import net.exotia.bridge.shared.services.entities.User;
 import net.exotia.bridge.shared.websocket.SocketResponse;
+import net.exotia.bridge.spigot.configuration.PluginConfiguration;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
@@ -18,6 +19,8 @@ import java.util.logging.Logger;
 public class WebSocketClient extends WebSocketListener {
     @Inject private Logger logger;
     @Inject private UserService userService;
+    @Inject private PluginConfiguration configuration;
+
     private final Gson gson = new Gson();
 
     @Override
@@ -34,8 +37,10 @@ public class WebSocketClient extends WebSocketListener {
             user = this.userService.getUser(socketResponse.getUuid());
         }
 
-        switch (socketResponse.getEndpoint()) {
-            case "/servers/Survival/economy":
+        String endpoint = socketResponse.getEndpoint().replace(this.configuration.getServerId(), "{serverId}");
+
+        switch (endpoint) {
+            case "/servers/{serverId}/economy":
                 assert user != null && socketResponse.getData() != null;
                 user.setBalance(Integer.parseInt(socketResponse.getData()));
                 break;

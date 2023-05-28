@@ -43,7 +43,7 @@ public final class SpigotPlugin extends JavaPlugin implements ExotiaBridgeInstan
 
     private void setupBridge() {
         this.bridge = this.injector.createInstance(SetupBridge.class);
-        this.userService = this.bridge.getUserService(null);
+        this.userService = this.bridge.getUserService();
         this.injector.registerInjectable(this.userService);
         this.userService.setupSocket(this.injector.createInstance(WebSocketClient.class));
         //this.injector.registerInjectable(webSocket);

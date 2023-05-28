@@ -11,8 +11,6 @@
     <modules>
         <module>new-proxy-plugin</module>
         <module>new-spigot-plugin</module>
-        <module>spigot-plugin</module>
-        <module>proxy-plugin</module>
         <module>shared</module>
         <module>messaging-api</module>
         <module>api</module>

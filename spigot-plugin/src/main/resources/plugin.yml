@@ -1,4 +1,0 @@
-name: ExotiaBridge
-version: '${project.version}'
-main: net.exotia.bridge.plugin.ExotiaBridge
-api-version: 1.16
