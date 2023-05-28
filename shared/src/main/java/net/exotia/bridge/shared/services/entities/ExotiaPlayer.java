@@ -17,6 +17,12 @@ public class ExotiaPlayer {
     private String username;
     private String ip;
 
+    public ExotiaPlayer(UUID uniqueId, String username) {
+        this.uniqueId = uniqueId;
+        this.username = username;
+        this.ip = "0.0.0.0";
+    }
+
     public String getUniqueIdString() {
         return this.uniqueId.toString();
     }

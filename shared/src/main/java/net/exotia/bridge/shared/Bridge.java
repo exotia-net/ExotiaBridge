@@ -1,10 +1,7 @@
 package net.exotia.bridge.shared;
 
 import net.exotia.bridge.shared.http.HttpService;
-import net.exotia.bridge.shared.messaging.PluginMessagingService;
 import net.exotia.bridge.shared.services.UserService;
-import okhttp3.WebSocketListener;
-
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -12,7 +9,6 @@ public abstract class Bridge {
     private HttpService httpService;
 
     public abstract ApiConfiguration getApiConfiguration();
-    public abstract void runAsync(Runnable runnable);
 
     public UserService getUserService() {
         return new UserService(this.getApiConfiguration(), this);

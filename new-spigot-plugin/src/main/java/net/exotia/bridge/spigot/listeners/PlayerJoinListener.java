@@ -16,7 +16,7 @@ public class PlayerJoinListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         if (this.userService.getUser(player.getUniqueId()) != null) return;
-        ExotiaPlayer exotiaPlayer = new ExotiaPlayer(player.getUniqueId(), player.getName(), "0.0.0.0");
+        ExotiaPlayer exotiaPlayer = new ExotiaPlayer(player.getUniqueId(), player.getName());
 
         this.userService.authorize(exotiaPlayer).thenAccept(user -> {
             this.userService.requestBalance(user.getUuid());

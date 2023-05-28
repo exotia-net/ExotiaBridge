@@ -2,14 +2,11 @@ package net.exotia.bridge.shared.services;
 
 import net.exotia.bridge.api.user.ApiUser;
 import net.exotia.bridge.api.user.ApiUserService;
-import net.exotia.bridge.messaging_api.channel.MessagingChannels;
-import net.exotia.bridge.messaging_api.packets.UserNeedUpdatePacket;
 import net.exotia.bridge.shared.ApiConfiguration;
 import net.exotia.bridge.shared.Bridge;
 import net.exotia.bridge.shared.http.HttpResponse;
 import net.exotia.bridge.shared.http.HttpService;
 import net.exotia.bridge.shared.http.exceptions.HttpRequestException;
-import net.exotia.bridge.shared.messaging.PluginMessagingService;
 import net.exotia.bridge.shared.services.entities.ExotiaPlayer;
 import net.exotia.bridge.shared.services.entities.User;
 import net.exotia.bridge.shared.services.responses.EconomyResponse;
@@ -21,9 +18,6 @@ import okhttp3.WebSocketListener;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
-import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
 
 import static net.exotia.bridge.shared.Endpoints.*;
 
@@ -88,29 +82,29 @@ public class UserService extends SocketService implements ApiUserService {
             return user;
         });
     }
-    public CompletableFuture<Integer> getPlayerBalance(ExotiaPlayer exotiaPlayer) {
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                String uri = getUri(PLAYER_BALANCE, this.configuration);
-                HttpResponse<EconomyResponse> response = this.httpService.get(uri, EconomyResponse.class, Map.of(AUTH_HEADER, exotiaPlayer.getCipher(this.configuration)));
-                return response.get().getBalance();
-            } catch (Exception exception) {
-                System.out.println(exception.getMessage());
-                throw exception;
-            }
-        });
-    }
-    public CompletableFuture<WalletResponse> getWallet(ExotiaPlayer exotiaPlayer) {
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                return this.httpService.get(
-                        getUri(PLAYER_WALLET_BALANCE, this.configuration),WalletResponse.class,
-                        Map.of(AUTH_HEADER, exotiaPlayer.getCipher(this.configuration))
-                ).get();
-            } catch (Exception exception) {
-                System.out.println(exception.getMessage());
-                throw exception;
-            }
-        });
-    }
+//    public CompletableFuture<Integer> getPlayerBalance(ExotiaPlayer exotiaPlayer) {
+//        return CompletableFuture.supplyAsync(() -> {
+//            try {
+//                String uri = getUri(PLAYER_BALANCE, this.configuration);
+//                HttpResponse<EconomyResponse> response = this.httpService.get(uri, EconomyResponse.class, Map.of(AUTH_HEADER, exotiaPlayer.getCipher(this.configuration)));
+//                return response.get().getBalance();
+//            } catch (Exception exception) {
+//                System.out.println(exception.getMessage());
+//                throw exception;
+//            }
+//        });
+//    }
+//    public CompletableFuture<WalletResponse> getWallet(ExotiaPlayer exotiaPlayer) {
+//        return CompletableFuture.supplyAsync(() -> {
+//            try {
+//                return this.httpService.get(
+//                        getUri(PLAYER_WALLET_BALANCE, this.configuration),WalletResponse.class,
+//                        Map.of(AUTH_HEADER, exotiaPlayer.getCipher(this.configuration))
+//                ).get();
+//            } catch (Exception exception) {
+//                System.out.println(exception.getMessage());
+//                throw exception;
+//            }
+//        });
+//    }
 }

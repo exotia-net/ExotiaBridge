@@ -2,7 +2,6 @@ package net.exotia.bridge.shared.websocket;
 
 import net.exotia.bridge.shared.ApiConfiguration;
 import okhttp3.WebSocket;
-
 import java.util.UUID;
 
 import static net.exotia.bridge.shared.Endpoints.GET_PLAYER_BALANCE_WS;
@@ -20,7 +19,6 @@ public class SocketService {
     public void sendMessage(String message) {
         this.webSocket.send(message);
     }
-
     public void requestBalance(UUID uuid) {
         this.webSocket.send(String.format(GET_PLAYER_BALANCE_WS, this.serverId, uuid.toString()));
     }

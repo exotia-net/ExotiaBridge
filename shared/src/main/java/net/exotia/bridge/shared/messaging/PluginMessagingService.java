@@ -2,7 +2,6 @@ package net.exotia.bridge.shared.messaging;
 
 import net.exotia.bridge.messaging_api.MessagingPacket;
 import net.exotia.bridge.messaging_api.MessagingService;
-
 import java.util.UUID;
 
 public abstract class PluginMessagingService extends MessagingService {

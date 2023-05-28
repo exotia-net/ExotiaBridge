@@ -15,7 +15,6 @@ public class User implements ApiUser {
     private String nickname;
     private String firstIp;
     private String lastIp;
-    private Update update;
 
     /**
      * Player balance (This value is different on every server)

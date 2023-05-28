@@ -6,20 +6,20 @@ import eu.okaeri.injector.OkaeriInjector;
 import net.exotia.bridge.api.ExotiaBridgeInstance;
 import net.exotia.bridge.api.ExotiaBridgeProvider;
 import net.exotia.bridge.api.user.ApiUserService;
+import net.exotia.bridge.shared.ApiConfiguration;
 import net.exotia.bridge.shared.Bridge;
 import net.exotia.bridge.shared.factory.ConfigurationFactory;
 import net.exotia.bridge.shared.services.UserService;
 import net.exotia.bridge.spigot.client.WebSocketClient;
 import net.exotia.bridge.spigot.configuration.PluginConfiguration;
 import net.exotia.bridge.spigot.listeners.PlayerJoinListener;
-import okhttp3.WebSocket;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class SpigotPlugin extends JavaPlugin implements ExotiaBridgeInstance {
     private final OkaeriInjector injector = OkaeriInjector.create();
     private Bridge bridge;
     private UserService userService;
-    private PluginConfiguration pluginConfiguration;
+    private PluginConfiguration configuration;
 
     @Override
     public void onEnable() {
@@ -42,16 +42,20 @@ public final class SpigotPlugin extends JavaPlugin implements ExotiaBridgeInstan
     }
 
     private void setupBridge() {
-        this.bridge = this.injector.createInstance(SetupBridge.class);
+        this.bridge = new Bridge() {
+            @Override
+            public ApiConfiguration getApiConfiguration() {
+                return configuration;
+            }
+        };
         this.userService = this.bridge.getUserService();
         this.injector.registerInjectable(this.userService);
         this.userService.setupSocket(this.injector.createInstance(WebSocketClient.class));
-        //this.injector.registerInjectable(webSocket);
     }
     private void setupConfiguration() {
-        ConfigurationFactory configurationFactory = new ConfigurationFactory(this.getDataFolder(), new YamlBukkitConfigurer(), new SerdesBukkit());
-        this.pluginConfiguration = configurationFactory.produce(PluginConfiguration.class, "configuration.yml");
-        this.injector.registerInjectable(this.pluginConfiguration);
+        ConfigurationFactory configurationFactory = new ConfigurationFactory(this.getDataFolder(),new YamlBukkitConfigurer(), new SerdesBukkit());
+        this.configuration = configurationFactory.produce(PluginConfiguration.class, "configuration.yml");
+        this.injector.registerInjectable(this.configuration);
     }
 
     @Override

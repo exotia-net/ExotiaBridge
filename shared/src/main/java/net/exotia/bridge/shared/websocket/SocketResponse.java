@@ -1,7 +1,6 @@
 package net.exotia.bridge.shared.websocket;
 
 import lombok.Getter;
-
 import java.util.UUID;
 
 @Getter
