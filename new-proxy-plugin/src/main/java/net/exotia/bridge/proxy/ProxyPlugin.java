@@ -7,8 +7,11 @@ import net.exotia.bridge.proxy.listeners.UserPostLoginListener;
 import net.exotia.bridge.shared.Bridge;
 import net.exotia.bridge.shared.http.HttpService;
 import net.exotia.bridge.shared.services.UserService;
+import net.exotia.bridge.shared.services.entities.ExotiaPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import okhttp3.WebSocket;
+
+import java.util.UUID;
 
 public final class ProxyPlugin extends Plugin {
     private Bridge bridge;

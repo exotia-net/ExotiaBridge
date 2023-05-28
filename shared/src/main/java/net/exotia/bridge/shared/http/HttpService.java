@@ -29,14 +29,14 @@ public class HttpService {
                 .retryOnConnectionFailure(true)
                 .build();
         Request request = new Request.Builder()
-                .url(this.changeProtocols(getUri(WEBSOCKET, apiConfiguration)))
+                .url(this.switchProtocols(getUri(WEBSOCKET, apiConfiguration)))
                 .header(AUTH_HEADER, new ExotiaPlayer(
                         UUID.fromString("00000000-0000-0000-0000-000000000000"),
                         "0", "0.0.0.0").getCipher(apiConfiguration))
                 .build();
         return wsClient.newWebSocket(request, webSocketListener);
     }
-    private String changeProtocols(String string) {
+    private String switchProtocols(String string) {
         return string.replace("http", "ws").replace("https", "wss");
     }
 

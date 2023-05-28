@@ -7,6 +7,9 @@ public class Endpoints {
     public static final String PLAYER_BALANCE = "/api/servers/%s";
     public static final String PLAYER_WALLET_BALANCE = "/api/wallet";
 
+    public static final String GET_PLAYER_BALANCE_WS = "GET /servers/%s/economy %s";
+    public static final String UPDATE_PLAYER_BALANCE_WS = "POST /servers/%s/economy %s %s";
+
     public static final String WEBSOCKET = "/ws";
 
     public static String getUri(String endpoint, ApiConfiguration configuration) {

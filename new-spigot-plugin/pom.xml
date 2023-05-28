@@ -61,6 +61,10 @@
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
+        <repository>
+            <id>okaeri-repo</id>
+            <url>https://storehouse.okaeri.eu/repository/maven-public/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -69,6 +73,23 @@
             <artifactId>spigot-api</artifactId>
             <version>1.19.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>eu.okaeri</groupId>
+            <artifactId>okaeri-configs-yaml-bukkit</artifactId>
+            <version>3.3.6</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>eu.okaeri</groupId>
+            <artifactId>okaeri-configs-serdes-bukkit</artifactId>
+            <version>3.3.6</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.exotia.bridge.shared</groupId>
+            <artifactId>shared</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

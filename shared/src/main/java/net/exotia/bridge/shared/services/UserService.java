@@ -15,7 +15,10 @@ import net.exotia.bridge.shared.services.entities.User;
 import net.exotia.bridge.shared.services.responses.EconomyResponse;
 import net.exotia.bridge.shared.services.responses.UserResponse;
 import net.exotia.bridge.shared.services.responses.WalletResponse;
+import net.exotia.bridge.shared.websocket.SocketService;
 import okhttp3.Response;
+import okhttp3.WebSocketListener;
+
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
@@ -24,7 +27,7 @@ import java.util.stream.Collectors;
 
 import static net.exotia.bridge.shared.Endpoints.*;
 
-public class UserService implements ApiUserService {
+public class UserService extends SocketService implements ApiUserService {
     private HttpService httpService;
     private ApiConfiguration configuration;
     private Bridge bridge;
@@ -35,6 +38,10 @@ public class UserService implements ApiUserService {
         this.bridge = bridge;
         this.configuration = apiConfiguration;
         this.pluginMessagingService = pluginMessagingService;
+    }
+
+    public void setupSocket(WebSocketListener webSocketListener) {
+        this.onConstruct(this.httpService.prepareWebSocketConnection(this.configuration, webSocketListener), this.configuration);
     }
 
     private Set<User> users = new HashSet<>();
@@ -148,10 +155,6 @@ public class UserService implements ApiUserService {
 
     @Override
     public void saveBalance(ApiUser apiUser) {
-        this.pluginMessagingService.sendMessageData(
-                this.pluginMessagingService.getPlayer(apiUser.getUniqueId()),
-                MessagingChannels.USER_NEED_UPDATE,
-                new UserNeedUpdatePacket(this.configuration.getServerId(), apiUser.getUniqueId().toString(), apiUser.getBalance())
-        );
+        this.setBalance(apiUser.getUniqueId(), apiUser.getBalance());
     }
 }
