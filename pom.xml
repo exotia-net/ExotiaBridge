@@ -38,7 +38,7 @@
 
     <distributionManagement>
         <repository>
-            <id>reposilite-repository</id>
+            <id>exotia-repository</id>
             <url>https://repository.exotia.net/releases</url>
         </repository>
     </distributionManagement>

@@ -24,17 +24,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.2.4</version>
-<!--                <configuration>-->
-<!--                    <createDependencyReducedPom>true</createDependencyReducedPom>-->
-<!--                    <filters>-->
-<!--                        <filter>-->
-<!--                            <artifact>*:*</artifact>-->
-<!--                            <excludes>-->
-<!--                                <exclude>**/lombok/*</exclude>-->
-<!--                            </excludes>-->
-<!--                        </filter>-->
-<!--                    </filters>-->
-<!--                </configuration>-->
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -62,7 +51,7 @@
         <dependency>
             <groupId>net.exotia.bridge</groupId>
             <artifactId>api</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.5</version>
         </dependency>
         <dependency>
             <groupId>net.exotia.bridge.messaging_api</groupId>

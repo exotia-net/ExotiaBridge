@@ -9,9 +9,7 @@ import net.exotia.bridge.shared.http.HttpService;
 import net.exotia.bridge.shared.http.exceptions.HttpRequestException;
 import net.exotia.bridge.shared.services.entities.ExotiaPlayer;
 import net.exotia.bridge.shared.services.entities.User;
-import net.exotia.bridge.shared.services.responses.EconomyResponse;
 import net.exotia.bridge.shared.services.responses.UserResponse;
-import net.exotia.bridge.shared.services.responses.WalletResponse;
 import net.exotia.bridge.shared.websocket.SocketService;
 import okhttp3.Response;
 import okhttp3.WebSocketListener;
@@ -32,7 +30,7 @@ public class UserService extends SocketService implements ApiUserService {
     }
 
     public void setupSocket(WebSocketListener webSocketListener) {
-        this.onConstruct(this.httpService.prepareWebSocketConnection(this.configuration, webSocketListener), this.configuration);
+        this.onConstruct(webSocketListener, this.httpService, this.configuration);
     }
 
     public void registerUser(User user) {
@@ -82,29 +80,4 @@ public class UserService extends SocketService implements ApiUserService {
             return user;
         });
     }
-//    public CompletableFuture<Integer> getPlayerBalance(ExotiaPlayer exotiaPlayer) {
-//        return CompletableFuture.supplyAsync(() -> {
-//            try {
-//                String uri = getUri(PLAYER_BALANCE, this.configuration);
-//                HttpResponse<EconomyResponse> response = this.httpService.get(uri, EconomyResponse.class, Map.of(AUTH_HEADER, exotiaPlayer.getCipher(this.configuration)));
-//                return response.get().getBalance();
-//            } catch (Exception exception) {
-//                System.out.println(exception.getMessage());
-//                throw exception;
-//            }
-//        });
-//    }
-//    public CompletableFuture<WalletResponse> getWallet(ExotiaPlayer exotiaPlayer) {
-//        return CompletableFuture.supplyAsync(() -> {
-//            try {
-//                return this.httpService.get(
-//                        getUri(PLAYER_WALLET_BALANCE, this.configuration),WalletResponse.class,
-//                        Map.of(AUTH_HEADER, exotiaPlayer.getCipher(this.configuration))
-//                ).get();
-//            } catch (Exception exception) {
-//                System.out.println(exception.getMessage());
-//                throw exception;
-//            }
-//        });
-//    }
 }

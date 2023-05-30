@@ -5,6 +5,7 @@ import eu.okaeri.configs.yaml.bukkit.serdes.SerdesBukkit;
 import eu.okaeri.injector.OkaeriInjector;
 import net.exotia.bridge.api.ExotiaBridgeInstance;
 import net.exotia.bridge.api.ExotiaBridgeProvider;
+import net.exotia.bridge.api.user.ApiEconomyService;
 import net.exotia.bridge.api.user.ApiUserService;
 import net.exotia.bridge.shared.ApiConfiguration;
 import net.exotia.bridge.shared.Bridge;
@@ -61,5 +62,10 @@ public final class SpigotPlugin extends JavaPlugin implements ExotiaBridgeInstan
     @Override
     public ApiUserService getUserService() {
         return this.userService;
+    }
+
+    @Override
+    public ApiEconomyService getEconomyService() {
+        return this.bridge.getEconomyService();
     }
 }

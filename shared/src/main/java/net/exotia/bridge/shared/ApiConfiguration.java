@@ -5,4 +5,5 @@ public interface ApiConfiguration {
     String getBaseUrl();
     String getApiKey();
     boolean isProxyServer();
+    boolean websocketAutoReconnect();
 }

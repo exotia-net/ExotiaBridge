@@ -8,4 +8,5 @@ public interface ApiUser {
     String getLastIp();
     String getNickname();
     int getBalance();
+    void setBalance(int value);
 }

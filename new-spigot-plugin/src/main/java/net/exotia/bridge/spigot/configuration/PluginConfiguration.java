@@ -16,4 +16,9 @@ public class PluginConfiguration extends OkaeriConfig implements ApiConfiguratio
     public boolean isProxyServer() {
         return false;
     }
+
+    @Override
+    public boolean websocketAutoReconnect() {
+        return true;
+    }
 }
