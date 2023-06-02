@@ -47,10 +47,12 @@ public class WebSocketClient extends WebSocketListener {
                 assert user != null;
                 user.setBalance(Integer.parseInt(socketResponse.getData()));
                 break;
+            case "POST /servers/{serverId}/economy":
+                break;
             default:
                 this.logger.severe(String.format("Invalid request! %s (%s)", socketResponse.getEndpoint(), socketResponse.getMessage()));
         }
-        this.logger.info(text);
+        //this.logger.info(text);
     }
 
     @Override
@@ -69,9 +71,9 @@ public class WebSocketClient extends WebSocketListener {
     private void tryToReconnect() {
         if (!this.configuration.websocketAutoReconnect()) return;
         this.logger.info("Trying to reconnect...");
-        this.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(this.plugin, () -> {
+        this.plugin.getServer().getScheduler().runTaskLater(this.plugin, () -> {
             this.userService.reconnect();
             this.logger.info("Reconnecting completed!");
-        }, 0L, 600L);
+        }, 100L);
     }
 }
