@@ -1,4 +1,5 @@
-name: ExotiaBridge-spigot
+name: ExotiaBridge
 version: '${project.version}'
 main: net.exotia.bridge.spigot.SpigotPlugin
 api-version: 1.19
+author: 'Exotia.net Team'

@@ -9,6 +9,7 @@ import net.exotia.bridge.api.user.ApiEconomyService;
 import net.exotia.bridge.api.user.ApiUserService;
 import net.exotia.bridge.proxy.configuration.PluginConfiguration;
 import net.exotia.bridge.proxy.configuration.TokenStorage;
+import net.exotia.bridge.proxy.listeners.PlayerLoginListener;
 import net.exotia.bridge.proxy.listeners.UserPostLoginListener;
 import net.exotia.bridge.proxy.messaging.MessagingModule;
 import net.exotia.bridge.shared.ApiConfiguration;
@@ -27,11 +28,15 @@ public final class ProxyPlugin extends Plugin implements ExotiaBridgeInstance {
     public void onEnable() {
         this.injector.registerInjectable(this);
         this.injector.registerInjectable(this.getLogger());
+        this.injector.registerInjectable(this.injector);
+
         this.setupConfiguration();
         this.setupBridge();
         this.getProxy().getPluginManager().registerListener(this, this.injector.createInstance(UserPostLoginListener.class));
 
         this.injector.createInstance(MessagingModule.class);
+
+        this.getProxy().getPluginManager().registerListener(this, this.injector.createInstance(PlayerLoginListener.class));
 
         ExotiaBridgeProvider.setProvider(this);
         this.bridge.pluginLoadedMessage(this.getLogger());

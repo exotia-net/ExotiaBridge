@@ -14,6 +14,7 @@ import net.exotia.bridge.shared.services.UserService;
 import net.exotia.bridge.spigot.client.WebSocketClient;
 import net.exotia.bridge.spigot.configuration.PluginConfiguration;
 import net.exotia.bridge.spigot.listeners.PlayerJoinListener;
+import net.exotia.bridge.spigot.messaging.MessagingModule;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class SpigotPlugin extends JavaPlugin implements ExotiaBridgeInstance {
@@ -30,6 +31,8 @@ public final class SpigotPlugin extends JavaPlugin implements ExotiaBridgeInstan
 
         this.setupConfiguration();
         this.setupBridge();
+
+        this.injector.createInstance(MessagingModule.class);
 
         this.getServer().getPluginManager().registerEvents(this.injector.createInstance(PlayerJoinListener.class), this);
 
