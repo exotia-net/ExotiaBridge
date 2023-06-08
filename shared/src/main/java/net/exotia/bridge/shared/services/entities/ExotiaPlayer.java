@@ -1,6 +1,5 @@
 package net.exotia.bridge.shared.services.entities;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.exotia.bridge.shared.ApiConfiguration;
@@ -11,16 +10,20 @@ import static net.exotia.bridge.shared.utils.CipherUtil.encrypt;
 import static net.exotia.bridge.shared.utils.CipherUtil.sha256;
 
 @Getter
-@AllArgsConstructor
 public class ExotiaPlayer {
-    private UUID uniqueId;
-    private String username;
-    private String ip;
+    private final UUID uniqueId;
+    private final String username;
+    private final String ip;
 
     public ExotiaPlayer(UUID uniqueId, String username) {
         this.uniqueId = uniqueId;
         this.username = username;
         this.ip = "0.0.0.0";
+    }
+    public ExotiaPlayer(UUID uniqueId, String username, String lastIp) {
+        this.uniqueId = uniqueId;
+        this.username = username;
+        this.ip = lastIp;
     }
 
     public String getUniqueIdString() {

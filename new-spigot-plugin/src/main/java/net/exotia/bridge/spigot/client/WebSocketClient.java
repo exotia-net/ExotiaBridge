@@ -3,8 +3,11 @@ package net.exotia.bridge.spigot.client;
 import com.google.gson.Gson;
 import eu.okaeri.injector.annotation.Inject;
 import eu.okaeri.injector.annotation.PostConstruct;
+import net.exotia.bridge.shared.exceptions.UndefinedUserException;
+import net.exotia.bridge.shared.services.CalendarService;
 import net.exotia.bridge.shared.services.UserService;
 import net.exotia.bridge.shared.services.entities.User;
+import net.exotia.bridge.shared.services.responses.CalendarResponse;
 import net.exotia.bridge.shared.websocket.SocketResponse;
 import net.exotia.bridge.spigot.configuration.PluginConfiguration;
 import okhttp3.Response;
@@ -22,6 +25,7 @@ public class WebSocketClient extends WebSocketListener {
     @Inject private Logger logger;
     @Inject private Plugin plugin;
     @Inject private UserService userService;
+    @Inject private CalendarService calendarService;
     @Inject private PluginConfiguration configuration;
 
     private final Gson gson = new Gson();
@@ -49,6 +53,13 @@ public class WebSocketClient extends WebSocketListener {
                 user.setBalance(Integer.parseInt(socketResponse.getData()));
                 break;
             case "POST /servers/{serverId}/economy":
+                break;
+            case "GET /calendars":
+                if (user == null) throw new UndefinedUserException(socketResponse.getUuid());
+                CalendarResponse calendarResponse = this.gson.fromJson(socketResponse.getData(), CalendarResponse.class);
+                user.setCalendar(calendarResponse.toCalendarUser());
+                break;
+            case "PUT /calendar":
                 break;
             default:
                 this.logger.severe(String.format("Invalid request! %s (%s)", socketResponse.getEndpoint(), socketResponse.getMessage()));

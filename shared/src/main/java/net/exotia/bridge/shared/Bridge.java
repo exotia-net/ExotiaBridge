@@ -1,6 +1,7 @@
 package net.exotia.bridge.shared;
 
 import net.exotia.bridge.shared.http.HttpService;
+import net.exotia.bridge.shared.services.CalendarService;
 import net.exotia.bridge.shared.services.EconomyService;
 import net.exotia.bridge.shared.services.UserService;
 import java.util.List;
@@ -18,6 +19,9 @@ public abstract class Bridge {
     }
     public EconomyService getEconomyService() {
         return new EconomyService(this.userService);
+    }
+    public CalendarService getCalendarService() {
+        return new CalendarService(this.userService);
     }
     public HttpService getHttpService() {
         if (this.httpService == null) this.httpService = new HttpService();

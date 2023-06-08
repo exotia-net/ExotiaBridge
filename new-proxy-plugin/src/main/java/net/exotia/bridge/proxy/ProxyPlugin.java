@@ -5,6 +5,7 @@ import eu.okaeri.injector.Injector;
 import eu.okaeri.injector.OkaeriInjector;
 import net.exotia.bridge.api.ExotiaBridgeInstance;
 import net.exotia.bridge.api.ExotiaBridgeProvider;
+import net.exotia.bridge.api.user.ApiCalendarService;
 import net.exotia.bridge.api.user.ApiEconomyService;
 import net.exotia.bridge.api.user.ApiUserService;
 import net.exotia.bridge.proxy.configuration.PluginConfiguration;
@@ -72,5 +73,10 @@ public final class ProxyPlugin extends Plugin implements ExotiaBridgeInstance {
     @Override
     public ApiEconomyService getEconomyService() {
         return this.bridge.getEconomyService();
+    }
+
+    @Override
+    public ApiCalendarService getCalendarService() {
+        return this.bridge.getCalendarService();
     }
 }

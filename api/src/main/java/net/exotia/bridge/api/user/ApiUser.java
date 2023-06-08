@@ -1,5 +1,7 @@
 package net.exotia.bridge.api.user;
 
+import net.exotia.bridge.api.entities.CalendarUser;
+
 import java.util.UUID;
 
 public interface ApiUser {
@@ -9,4 +11,5 @@ public interface ApiUser {
     String getNickname();
     int getBalance();
     void setBalance(int value);
+    void setCalendar(CalendarUser calendarUser);
 }

@@ -7,8 +7,7 @@ import okhttp3.WebSocketListener;
 
 import java.util.UUID;
 
-import static net.exotia.bridge.shared.Endpoints.GET_PLAYER_BALANCE_WS;
-import static net.exotia.bridge.shared.Endpoints.UPDATE_PLAYER_BALANCE_WS;
+import static net.exotia.bridge.shared.Endpoints.*;
 
 public class SocketService {
     private WebSocket webSocket;
@@ -26,14 +25,18 @@ public class SocketService {
     }
 
     public void sendMessage(String message) {
+        System.out.println(message);
         this.webSocket.send(message);
     }
     public void requestBalance(UUID uuid) {
         this.webSocket.send(String.format(GET_PLAYER_BALANCE_WS, this.serverId, uuid.toString()));
     }
     public void setBalance(UUID uuid, int balance) {
-        System.out.println(String.format(UPDATE_PLAYER_BALANCE_WS, this.serverId, uuid.toString(), balance));
-        this.webSocket.send(String.format(UPDATE_PLAYER_BALANCE_WS, this.serverId, uuid.toString(), balance));
+        this.webSocket.send(String.format(UPDATE_PLAYER_BALANCE_WS, this.serverId, uuid, balance));
+    }
+
+    public void saveCalendar(UUID uuid, int step, int streak) {
+        this.webSocket.send(String.format(UPDATE_PLAYER_CALENDAR, uuid, step, streak));
     }
 
     public void reconnect() {
