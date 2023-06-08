@@ -8,7 +8,9 @@ import net.exotia.bridge.api.ExotiaBridgeProvider;
 import net.exotia.bridge.api.user.ApiEconomyService;
 import net.exotia.bridge.api.user.ApiUserService;
 import net.exotia.bridge.proxy.configuration.PluginConfiguration;
+import net.exotia.bridge.proxy.configuration.TokenStorage;
 import net.exotia.bridge.proxy.listeners.UserPostLoginListener;
+import net.exotia.bridge.proxy.messaging.MessagingModule;
 import net.exotia.bridge.shared.ApiConfiguration;
 import net.exotia.bridge.shared.Bridge;
 import net.exotia.bridge.shared.factory.ConfigurationFactory;
@@ -28,6 +30,8 @@ public final class ProxyPlugin extends Plugin implements ExotiaBridgeInstance {
         this.setupConfiguration();
         this.setupBridge();
         this.getProxy().getPluginManager().registerListener(this, this.injector.createInstance(UserPostLoginListener.class));
+
+        this.injector.createInstance(MessagingModule.class);
 
         ExotiaBridgeProvider.setProvider(this);
         this.bridge.pluginLoadedMessage(this.getLogger());
@@ -52,6 +56,7 @@ public final class ProxyPlugin extends Plugin implements ExotiaBridgeInstance {
         ConfigurationFactory factory = new ConfigurationFactory(this.getDataFolder(), new YamlBungeeConfigurer());
         this.configuration = factory.produce(PluginConfiguration.class, "configuration.yml");
         this.injector.registerInjectable(this.configuration);
+        this.injector.registerInjectable(factory.produce(TokenStorage.class, "token.yml"));
     }
 
     @Override

@@ -4,13 +4,16 @@ import eu.okaeri.injector.annotation.Inject;
 import net.exotia.bridge.shared.messages.MessageService;
 import net.exotia.bridge.shared.services.UserService;
 import net.exotia.bridge.shared.services.entities.ExotiaPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.plugin.Plugin;
 
 public class PlayerJoinListener implements Listener {
     @Inject private UserService userService;
+    @Inject private Plugin plugin;
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
@@ -24,8 +27,12 @@ public class PlayerJoinListener implements Listener {
             if (exception != null) {
                 exception.printStackTrace();
                 player.sendMessage(MessageService.getFormattedMessage(exception.getMessage()));
+                Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
+                    player.sendMessage("test");
+                    player.kickPlayer(MessageService.getFormattedMessage(exception.getMessage()));
+                }, 20L);
             }
             return null;
-        }).join();
+        });
     }
 }
