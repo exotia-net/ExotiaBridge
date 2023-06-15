@@ -40,9 +40,4 @@ public class User implements ApiUser {
     public UUID getUniqueId() {
         return this.uuid;
     }
-
-    @Override
-    public void setCalendar(CalendarUser calendarUser) {
-        this.calendar = calendarUser;
-    }
 }

@@ -7,4 +7,5 @@ public interface ApiUserService {
     ApiUser getUser(UUID uniqueId);
     Set<ApiUser> getUsers();
     void saveBalance(ApiUser apiUser);
+    void saveCalendar(ApiUser apiUser);
 }

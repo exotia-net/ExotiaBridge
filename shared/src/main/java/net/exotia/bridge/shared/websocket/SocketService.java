@@ -29,14 +29,13 @@ public class SocketService {
         this.webSocket.send(message);
     }
     public void requestBalance(UUID uuid) {
-        this.webSocket.send(String.format(GET_PLAYER_BALANCE_WS, this.serverId, uuid.toString()));
+        this.sendMessage(String.format(GET_PLAYER_BALANCE_WS, this.serverId, uuid.toString()));
     }
     public void setBalance(UUID uuid, int balance) {
-        this.webSocket.send(String.format(UPDATE_PLAYER_BALANCE_WS, this.serverId, uuid, balance));
+        this.sendMessage(String.format(UPDATE_PLAYER_BALANCE_WS, this.serverId, uuid, balance));
     }
-
-    public void saveCalendar(UUID uuid, int step, int streak) {
-        this.webSocket.send(String.format(UPDATE_PLAYER_CALENDAR, uuid, step, streak));
+    public void sendCalendarRequest(UUID uuid, int step, int streak) {
+        this.sendMessage(String.format(UPDATE_PLAYER_CALENDAR, uuid, step, streak));
     }
 
     public void reconnect() {

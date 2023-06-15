@@ -9,6 +9,7 @@ import net.exotia.bridge.shared.services.entities.User;
 import java.util.ArrayList;
 import java.util.UUID;
 
+@Deprecated
 public class CalendarService implements ApiCalendarService {
     private final UserService userService;
 
@@ -30,11 +31,6 @@ public class CalendarService implements ApiCalendarService {
     }
     @Override
     public void add(ApiUser user, CalendarUser calendarUser) {
-
         user.setCalendar(calendarUser);
-    }
-    @Override
-    public void save(ApiUser user, int step, int streak) {
-        this.userService.saveCalendar(user.getUniqueId(), step, streak);
     }
 }

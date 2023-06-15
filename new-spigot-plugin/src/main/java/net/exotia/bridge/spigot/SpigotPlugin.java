@@ -11,6 +11,7 @@ import net.exotia.bridge.api.user.ApiUserService;
 import net.exotia.bridge.shared.ApiConfiguration;
 import net.exotia.bridge.shared.Bridge;
 import net.exotia.bridge.shared.factory.ConfigurationFactory;
+import net.exotia.bridge.shared.services.CalendarService;
 import net.exotia.bridge.shared.services.UserService;
 import net.exotia.bridge.spigot.client.WebSocketClient;
 import net.exotia.bridge.spigot.configuration.PluginConfiguration;
@@ -22,6 +23,7 @@ public final class SpigotPlugin extends JavaPlugin implements ExotiaBridgeInstan
     private final OkaeriInjector injector = OkaeriInjector.create();
     private Bridge bridge;
     private UserService userService;
+    private CalendarService calendarService;
     private PluginConfiguration configuration;
 
     @Override
@@ -55,6 +57,8 @@ public final class SpigotPlugin extends JavaPlugin implements ExotiaBridgeInstan
         };
         this.userService = this.bridge.getUserService();
         this.injector.registerInjectable(this.userService);
+        this.calendarService = this.bridge.getCalendarService();
+        this.injector.registerInjectable(this.calendarService);
         this.userService.setupSocket(this.injector.createInstance(WebSocketClient.class));
     }
     private void setupConfiguration() {
@@ -75,6 +79,6 @@ public final class SpigotPlugin extends JavaPlugin implements ExotiaBridgeInstan
 
     @Override
     public ApiCalendarService getCalendarService() {
-        return this.bridge.getCalendarService();
+        return this.calendarService;
     }
 }

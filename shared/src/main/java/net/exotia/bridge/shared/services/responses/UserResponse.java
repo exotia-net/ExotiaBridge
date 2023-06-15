@@ -1,9 +1,11 @@
 package net.exotia.bridge.shared.services.responses;
 
+import lombok.Getter;
 import net.exotia.bridge.shared.services.entities.User;
 
 import java.util.UUID;
 
+@Getter
 public class UserResponse {
     private String createdAt;
     private String firstIp;
@@ -14,26 +16,6 @@ public class UserResponse {
 
     public UUID getUuid() {
         return UUID.fromString(this.uuid);
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public String getFirstIp() {
-        return firstIp;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getLastIp() {
-        return lastIp;
-    }
-
-    public String getUpdatedAt() {
-        return updatedAt;
     }
 
     public User getUser(String nickname) {

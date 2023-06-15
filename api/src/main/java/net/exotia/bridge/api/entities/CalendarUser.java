@@ -3,6 +3,7 @@ package net.exotia.bridge.api.entities;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CalendarUser {
@@ -25,6 +26,13 @@ public class CalendarUser {
         );
     }
 
+    public void reset() {
+        this.step = 0;
+        this.notObtainedRewards = new ArrayList<>();
+        this.lastObtained = 0;
+        this.streakDays = 0;
+    }
+
     public void addStep(int size) {
         if (this.step >= size) return;
         if (this.hasStreak()) this.streakDays++;
@@ -45,5 +53,21 @@ public class CalendarUser {
         return LocalDateTime.now().isAfter(
                 LocalDateTime.ofInstant(Instant.ofEpochMilli(this.lastObtained), ZoneId.systemDefault()).plusDays(1).withHour(6)
         );
+    }
+
+    public int getStep() {
+        return this.step;
+    }
+
+    public List<Integer> getNotObtainedRewards() {
+        return this.notObtainedRewards;
+    }
+
+    public long getLastObtained() {
+        return this.lastObtained;
+    }
+
+    public int getStreakDays() {
+        return this.streakDays;
     }
 }

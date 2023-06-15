@@ -11,5 +11,6 @@ public interface ApiUser {
     String getNickname();
     int getBalance();
     void setBalance(int value);
+    CalendarUser getCalendar();
     void setCalendar(CalendarUser calendarUser);
 }

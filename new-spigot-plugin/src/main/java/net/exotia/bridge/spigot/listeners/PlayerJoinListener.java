@@ -22,23 +22,22 @@ public class PlayerJoinListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        System.out.println("Joined!");
-//        if (this.userService.getUser(player.getUniqueId()) != null) return;
-//        ExotiaPlayer exotiaPlayer = new ExotiaPlayer(player.getUniqueId(), player.getName());
-//
-//        this.userService.authorize(exotiaPlayer).thenAccept(user -> {
-//            this.userService.requestBalance(user.getUuid());
-//        }).handle((result, exception) -> {
-//            if (exception != null) {
-//                exception.printStackTrace();
-//                player.sendMessage(MessageService.getFormattedMessage(exception.getMessage()));
-//                Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
-//                    player.sendMessage("test");
-//                    player.kickPlayer(MessageService.getFormattedMessage(exception.getMessage()));
-//                }, 20L);
-//            }
-//            return null;
-//        });
+        if (this.userService.getUser(player.getUniqueId()) != null) return;
+        ExotiaPlayer exotiaPlayer = new ExotiaPlayer(player.getUniqueId(), player.getName());
+
+        this.userService.authorize(exotiaPlayer).thenAccept(user -> {
+            this.userService.requestBalance(user.getUuid());
+        }).handle((result, exception) -> {
+            if (exception != null) {
+                exception.printStackTrace();
+                player.sendMessage(MessageService.getFormattedMessage(exception.getMessage()));
+                Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
+                    player.sendMessage("test");
+                    player.kickPlayer(MessageService.getFormattedMessage(exception.getMessage()));
+                }, 20L);
+            }
+            return null;
+        });
 
     }
 }

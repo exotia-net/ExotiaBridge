@@ -1,5 +1,6 @@
 package net.exotia.bridge.shared.services;
 
+import net.exotia.bridge.api.entities.CalendarUser;
 import net.exotia.bridge.api.user.ApiUser;
 import net.exotia.bridge.api.user.ApiUserService;
 import net.exotia.bridge.shared.ApiConfiguration;
@@ -49,6 +50,12 @@ public class UserService extends SocketService implements ApiUserService {
     @Override
     public void saveBalance(ApiUser apiUser) {
         this.setBalance(apiUser.getUniqueId(), apiUser.getBalance());
+    }
+
+    @Override
+    public void saveCalendar(ApiUser apiUser) {
+        CalendarUser calendar = apiUser.getCalendar();
+        this.sendCalendarRequest(apiUser.getUniqueId(), calendar.getStep(), calendar.getStreakDays());
     }
 
     public CompletableFuture<Boolean> signUp(ExotiaPlayer player) {
