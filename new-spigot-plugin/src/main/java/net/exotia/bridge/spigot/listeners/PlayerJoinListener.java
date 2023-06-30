@@ -1,8 +1,6 @@
 package net.exotia.bridge.spigot.listeners;
 
 import eu.okaeri.injector.annotation.Inject;
-import net.exotia.bridge.messaging_api.channel.MessagingChannels;
-import net.exotia.bridge.messaging_api.packets.TokenPacket;
 import net.exotia.bridge.shared.messages.MessageService;
 import net.exotia.bridge.shared.services.UserService;
 import net.exotia.bridge.shared.services.entities.ExotiaPlayer;
@@ -12,7 +10,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.plugin.Plugin;
@@ -26,7 +23,8 @@ public class PlayerJoinListener implements Listener {
     @EventHandler
     public void onPlayerLogin(PlayerLoginEvent event) {
         if (!this.configuration.getAddresses().contains(event.getHostname())) {
-            event.disallow(PlayerLoginEvent.Result.KICK_FULL, MessageService.getFormattedMessage("<red>Nie mozna autoryzowac polaczenia z adresu " + event.getHostname()));
+            String message = this.configuration.getAuthFailedMessage().replace("{hostname}", event.getHostname());
+            event.disallow(PlayerLoginEvent.Result.KICK_FULL, MessageService.getFormattedMessage(message));
         }
 
         Player player = event.getPlayer();

@@ -13,6 +13,8 @@ public class PluginConfiguration extends OkaeriConfig implements ApiConfiguratio
     @Comment("Interface url.")
     private String baseUrl = "https://api.exotia.net";
     private String apiKey = "d!noT41*Z8UbxB}JZ<s8'#'GA";
+    private List<String> addresses = List.of("wings-s1-ext.exotia.net:50001");
+    private String authFailedMessage = "<red>Nie mozna autoryzowac polaczenia z adresu {hostname}";
 
     @Override
     public boolean isProxyServer() {
@@ -23,6 +25,4 @@ public class PluginConfiguration extends OkaeriConfig implements ApiConfiguratio
     public boolean websocketAutoReconnect() {
         return true;
     }
-
-    private List<String> addresses = List.of("wings-s1-ext.exotia.net:50001");
 }

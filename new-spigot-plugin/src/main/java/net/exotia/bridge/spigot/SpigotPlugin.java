@@ -16,7 +16,6 @@ import net.exotia.bridge.shared.services.UserService;
 import net.exotia.bridge.spigot.client.WebSocketClient;
 import net.exotia.bridge.spigot.configuration.PluginConfiguration;
 import net.exotia.bridge.spigot.listeners.PlayerJoinListener;
-import net.exotia.bridge.spigot.messaging.MessagingModule;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class SpigotPlugin extends JavaPlugin implements ExotiaBridgeInstance {
@@ -35,8 +34,6 @@ public final class SpigotPlugin extends JavaPlugin implements ExotiaBridgeInstan
         this.setupConfiguration();
         this.setupBridge();
 
-        this.injector.createInstance(MessagingModule.class);
-
         this.getServer().getPluginManager().registerEvents(this.injector.createInstance(PlayerJoinListener.class), this);
 
         ExotiaBridgeProvider.setProvider(this);
@@ -47,7 +44,6 @@ public final class SpigotPlugin extends JavaPlugin implements ExotiaBridgeInstan
     public void onDisable() {
         this.bridge.stopHttpService();
     }
-
     private void setupBridge() {
         this.bridge = new Bridge() {
             @Override
@@ -66,17 +62,14 @@ public final class SpigotPlugin extends JavaPlugin implements ExotiaBridgeInstan
         this.configuration = configurationFactory.produce(PluginConfiguration.class, "configuration.yml");
         this.injector.registerInjectable(this.configuration);
     }
-
     @Override
     public ApiUserService getUserService() {
         return this.userService;
     }
-
     @Override
     public ApiEconomyService getEconomyService() {
         return this.bridge.getEconomyService();
     }
-
     @Override
     public ApiCalendarService getCalendarService() {
         return this.calendarService;
