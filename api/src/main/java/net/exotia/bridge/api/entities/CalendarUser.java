@@ -70,4 +70,20 @@ public class CalendarUser {
     public int getStreakDays() {
         return this.streakDays;
     }
+
+    public void setStep(int step) {
+        this.step = step;
+    }
+
+    public void setNotObtainedRewards(List<Integer> notObtainedRewards) {
+        this.notObtainedRewards = notObtainedRewards;
+    }
+
+    public void setLastObtained(long lastObtained) {
+        this.lastObtained = lastObtained;
+    }
+
+    public void setStreakDays(int streakDays) {
+        this.streakDays = streakDays;
+    }
 }

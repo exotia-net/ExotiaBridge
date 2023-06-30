@@ -5,6 +5,8 @@ import eu.okaeri.configs.annotation.Comment;
 import lombok.Getter;
 import net.exotia.bridge.shared.ApiConfiguration;
 
+import java.util.List;
+
 @Getter
 public class PluginConfiguration extends OkaeriConfig implements ApiConfiguration {
     private String serverId = "Survival";
@@ -21,4 +23,6 @@ public class PluginConfiguration extends OkaeriConfig implements ApiConfiguratio
     public boolean websocketAutoReconnect() {
         return true;
     }
+
+    private List<String> addresses = List.of("wings-s1-ext.exotia.net:50001");
 }

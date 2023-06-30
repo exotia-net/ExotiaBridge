@@ -58,6 +58,11 @@ public class UserService extends SocketService implements ApiUserService {
         this.sendCalendarRequest(apiUser.getUniqueId(), calendar.getStep(), calendar.getStreakDays());
     }
 
+    @Override
+    public void sendRawSocketMessage(String message) {
+        this.sendMessage(message);
+    }
+
     public CompletableFuture<Boolean> signUp(ExotiaPlayer player) {
         return CompletableFuture.supplyAsync(() -> {
             HttpResponse<?> httpResponse = this.httpService.post(getUri(AUTH_SIGNUP, this.configuration),

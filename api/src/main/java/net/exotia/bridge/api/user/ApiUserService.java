@@ -8,4 +8,5 @@ public interface ApiUserService {
     Set<ApiUser> getUsers();
     void saveBalance(ApiUser apiUser);
     void saveCalendar(ApiUser apiUser);
+    void sendRawSocketMessage(String message);
 }
