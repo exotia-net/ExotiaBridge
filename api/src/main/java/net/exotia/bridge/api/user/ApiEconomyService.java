@@ -9,6 +9,7 @@ public interface ApiEconomyService {
     void take(UUID uuid, int value);
     void give(ApiUser apiUser, int value);
     void give(UUID uuid, int value);
+    void giveRaw(UUID uuid, int value);
     void save(ApiUser apiUser);
     void save(UUID uuid);
 }

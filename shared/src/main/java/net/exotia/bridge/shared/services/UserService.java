@@ -55,7 +55,7 @@ public class UserService extends SocketService implements ApiUserService {
     @Override
     public void saveCalendar(ApiUser apiUser) {
         CalendarUser calendar = apiUser.getCalendar();
-        this.sendCalendarRequest(apiUser.getUniqueId(), calendar.getStep(), calendar.getStreakDays());
+        this.sendCalendarRequest(apiUser.getUniqueId(), calendar);
     }
 
     @Override

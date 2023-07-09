@@ -5,10 +5,10 @@ import net.exotia.bridge.shared.messages.MessageService;
 import net.exotia.bridge.shared.services.UserService;
 import net.exotia.bridge.shared.services.entities.ExotiaPlayer;
 import net.exotia.bridge.spigot.configuration.PluginConfiguration;
-import net.exotia.bridge.spigot.messaging.SpigotMessagingService;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
@@ -17,22 +17,26 @@ import org.bukkit.plugin.Plugin;
 public class PlayerJoinListener implements Listener {
     @Inject private UserService userService;
     @Inject private Plugin plugin;
-    @Inject private SpigotMessagingService spigotMessagingService;
     @Inject private PluginConfiguration configuration;
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerLogin(PlayerLoginEvent event) {
-        if (!this.configuration.getAddresses().contains(event.getHostname())) {
-            String message = this.configuration.getAuthFailedMessage().replace("{hostname}", event.getHostname());
-            event.disallow(PlayerLoginEvent.Result.KICK_FULL, MessageService.getFormattedMessage(message));
-        }
+//        if (!this.configuration.getAddresses().contains(event.getHostname())) {
+//            String message = this.configuration.getAuthFailedMessage().replace("{hostname}", event.getHostname());
+//            event.disallow(PlayerLoginEvent.Result.KICK_FULL, MessageService.getFormattedMessage(message));
+//        }
 
         Player player = event.getPlayer();
-        if (this.userService.getUser(player.getUniqueId()) != null) return;
+        if (this.userService.getUser(player.getUniqueId()) != null) {
+            this.userService.requestBalance(player.getUniqueId());
+            this.userService.requestCalendar(player.getUniqueId());
+            return;
+        }
         ExotiaPlayer exotiaPlayer = new ExotiaPlayer(player.getUniqueId(), player.getName());
 
         this.userService.authorize(exotiaPlayer).thenAccept(user -> {
             this.userService.requestBalance(user.getUuid());
+            this.userService.requestCalendar(user.getUuid());
         }).handle((result, exception) -> {
             if (exception != null) {
                 exception.printStackTrace();

@@ -47,6 +47,11 @@ public class EconomyService implements ApiEconomyService {
     }
 
     @Override
+    public void giveRaw(UUID uuid, int value) {
+        this.userService.sendRawSocketMessage(String.format("POST /servers/{serverId}/economy/add %s %s", uuid, value));
+    }
+
+    @Override
     public void save(UUID uuid) {
         User user = this.userService.getUser(uuid);
         this.save(user);
