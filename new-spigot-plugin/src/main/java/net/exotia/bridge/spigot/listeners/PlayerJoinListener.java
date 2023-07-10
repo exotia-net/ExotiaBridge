@@ -4,13 +4,13 @@ import eu.okaeri.injector.annotation.Inject;
 import net.exotia.bridge.shared.messages.MessageService;
 import net.exotia.bridge.shared.services.UserService;
 import net.exotia.bridge.shared.services.entities.ExotiaPlayer;
+import net.exotia.bridge.shared.services.entities.User;
 import net.exotia.bridge.spigot.configuration.PluginConfiguration;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.plugin.Plugin;
 
@@ -21,23 +21,19 @@ public class PlayerJoinListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerLogin(PlayerLoginEvent event) {
-//        if (!this.configuration.getAddresses().contains(event.getHostname())) {
-//            String message = this.configuration.getAuthFailedMessage().replace("{hostname}", event.getHostname());
-//            event.disallow(PlayerLoginEvent.Result.KICK_FULL, MessageService.getFormattedMessage(message));
-//        }
+        if (this.configuration.isEnableAddressChecker() && !this.configuration.getAddresses().contains(event.getHostname())) {
+            String message = this.configuration.getAuthFailedMessage().replace("{hostname}", event.getHostname());
+            event.disallow(PlayerLoginEvent.Result.KICK_FULL, MessageService.getFormattedMessage(message));
+        }
 
         Player player = event.getPlayer();
-        if (this.userService.getUser(player.getUniqueId()) != null) {
-            this.userService.requestBalance(player.getUniqueId());
-            this.userService.requestCalendar(player.getUniqueId());
+        User user = this.userService.getUser(player.getUniqueId());
+        if (user != null) {
+            this.sendRequests(user);
             return;
         }
         ExotiaPlayer exotiaPlayer = new ExotiaPlayer(player.getUniqueId(), player.getName());
-
-        this.userService.authorize(exotiaPlayer).thenAccept(user -> {
-            this.userService.requestBalance(user.getUuid());
-            this.userService.requestCalendar(user.getUuid());
-        }).handle((result, exception) -> {
+        this.userService.authorize(exotiaPlayer).thenAccept(this::sendRequests).handle((result, exception) -> {
             if (exception != null) {
                 exception.printStackTrace();
                 player.sendMessage(MessageService.getFormattedMessage(exception.getMessage()));
@@ -49,25 +45,8 @@ public class PlayerJoinListener implements Listener {
         });
     }
 
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-//        Player player = event.getPlayer();
-//        if (this.userService.getUser(player.getUniqueId()) != null) return;
-//        ExotiaPlayer exotiaPlayer = new ExotiaPlayer(player.getUniqueId(), player.getName());
-//
-//        this.userService.authorize(exotiaPlayer).thenAccept(user -> {
-//            this.userService.requestBalance(user.getUuid());
-//        }).handle((result, exception) -> {
-//            if (exception != null) {
-//                exception.printStackTrace();
-//                player.sendMessage(MessageService.getFormattedMessage(exception.getMessage()));
-//                Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
-//                    player.sendMessage("test");
-//                    player.kickPlayer(MessageService.getFormattedMessage(exception.getMessage()));
-//                }, 20L);
-//            }
-//            return null;
-//        });
-
+    private void sendRequests(User user) {
+        this.userService.requestBalance(user.getUuid());
+        this.userService.requestCalendar(user.getUuid());
     }
 }
