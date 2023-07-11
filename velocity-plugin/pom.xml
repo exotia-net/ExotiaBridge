@@ -98,19 +98,30 @@
             <id>papermc-repo</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
+        <repository>
+            <id>exotia-repository-releases</id>
+            <name>Exotia.net maven repository</name>
+            <url>https://repository.exotia.net/releases</url>
+        </repository>
     </repositories>
 
     <dependencies>
         <dependency>
             <groupId>com.velocitypowered</groupId>
             <artifactId>velocity-api</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
+            <version>3.1.2-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.velocitypowered</groupId>
             <artifactId>velocity-annotation-processor</artifactId>
             <version>4.0.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>pl.minecodes.minelogin</groupId>
+            <artifactId>velocity-api</artifactId>
+            <version>1.3.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
