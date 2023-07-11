@@ -4,29 +4,33 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>net.exotia.bridge.spigot</groupId>
-    <artifactId>new-spigot-plugin</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <parent>
+        <groupId>net.exotia.bridge</groupId>
+        <artifactId>ExotiaBridge</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
 
-    <name>ExotiaBridge-spigot</name>
+    <groupId>net.exotia.bridge.velocity</groupId>
+    <artifactId>velocity-plugin</artifactId>
+
 
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>16</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 
     <build>
-        <finalName>ExotiaBridge-spigot</finalName>
+        <finalName>ExotiaBridge-velocity</finalName>
+        <defaultGoal>clean package</defaultGoal>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>16</source>
-                    <target>16</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -48,7 +52,7 @@
         </plugins>
         <resources>
             <resource>
-                <directory>src/main/resources</directory>
+                <directory>${project.basedir}/src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
         </resources>
@@ -56,51 +60,33 @@
 
     <repositories>
         <repository>
-            <id>spigotmc-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+            <id>papermc-repo</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
         <repository>
-            <id>sonatype</id>
-            <url>https://oss.sonatype.org/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>okaeri-repo</id>
-            <url>https://storehouse.okaeri.eu/repository/maven-public/</url>
-        </repository>
-        <repository>
-            <id>panda-repository</id>
-            <url>https://repo.panda-lang.org/releases</url>
+            <id>exotia-repository-releases</id>
+            <name>Exotia.net maven repository</name>
+            <url>https://repository.exotia.net/releases</url>
         </repository>
     </repositories>
 
     <dependencies>
         <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.19.4-R0.1-SNAPSHOT</version>
+            <groupId>com.velocitypowered</groupId>
+            <artifactId>velocity-api</artifactId>
+            <version>3.1.2-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>eu.okaeri</groupId>
-            <artifactId>okaeri-configs-yaml-bukkit</artifactId>
-            <version>3.3.6</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>eu.okaeri</groupId>
-            <artifactId>okaeri-configs-serdes-bukkit</artifactId>
-            <version>3.3.6</version>
-            <scope>compile</scope>
+            <groupId>pl.minecodes.minelogin</groupId>
+            <artifactId>velocity-api</artifactId>
+            <version>1.3.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.exotia.bridge.shared</groupId>
             <artifactId>shared</artifactId>
             <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>dev.rollczi.litecommands</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>2.8.8</version>
         </dependency>
     </dependencies>
 </project>
