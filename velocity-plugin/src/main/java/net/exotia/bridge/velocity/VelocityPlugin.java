@@ -12,11 +12,15 @@ import eu.okaeri.injector.Injector;
 import eu.okaeri.injector.OkaeriInjector;
 import net.exotia.bridge.api.ExotiaBridgeInstance;
 import net.exotia.bridge.api.ExotiaBridgeProvider;
+import net.exotia.bridge.api.user.ApiCalendarService;
+import net.exotia.bridge.api.user.ApiEconomyService;
+import net.exotia.bridge.api.user.ApiUserService;
 import net.exotia.bridge.shared.ApiConfiguration;
 import net.exotia.bridge.shared.Bridge;
 import net.exotia.bridge.shared.configuration.proxy.ProxyConfiguration;
 import net.exotia.bridge.shared.factory.ConfigurationFactory;
 import net.exotia.bridge.shared.factory.FactoryPlatform;
+import net.exotia.bridge.shared.services.UserService;
 import net.exotia.bridge.velocity.listeners.UserPostLoginListener;
 import org.slf4j.Logger;
 
@@ -24,13 +28,14 @@ import java.io.File;
 import java.nio.file.Path;
 
 @Plugin(
-        id = "velocity-plugin",
+        id = "exotiabridge",
         name = "ExotiaBridge-velocity",
         version = "1.0-SNAPSHOT"
 )
-public class VelocityPlugin extends Bridge implements ExotiaBridgeInstance  {
+public class VelocityPlugin implements ExotiaBridgeInstance  {
     private final Injector injector = OkaeriInjector.create();
-    private ProxyConfiguration proxyConfiguration;
+    private Bridge bridge;
+    private UserService userService;
 
     @Inject private Logger logger;
     @Inject private ProxyServer proxyServer;
@@ -48,12 +53,21 @@ public class VelocityPlugin extends Bridge implements ExotiaBridgeInstance  {
          */
         this.createPluginDataFolder();
         ConfigurationFactory configurationFactory = new ConfigurationFactory(this.dataDirectory.toFile());
-        this.proxyConfiguration = configurationFactory.produce(FactoryPlatform.VELOCITY, ProxyConfiguration.class, "configuration.yml");
-        this.injector.registerInjectable(this.proxyConfiguration);
+        ProxyConfiguration proxyConfiguration = configurationFactory.produce(FactoryPlatform.VELOCITY, ProxyConfiguration.class, "configuration.yml");
+        this.injector.registerInjectable(proxyConfiguration);
 
         EventManager eventManager = this.proxyServer.getEventManager();
         eventManager.register(this, this.injector.createInstance(UserPostLoginListener.class));
         this.logger.info("Successfully registered listeners.");
+
+        this.bridge = new Bridge() {
+            @Override
+            public ApiConfiguration getApiConfiguration() {
+                return proxyConfiguration;
+            }
+        };
+        this.userService = this.bridge.getUserService();
+        this.injector.registerInjectable(userService);
 
         ExotiaBridgeProvider.setProvider(this);
     }
@@ -66,7 +80,17 @@ public class VelocityPlugin extends Bridge implements ExotiaBridgeInstance  {
     }
 
     @Override
-    public ApiConfiguration getApiConfiguration() {
-        return this.proxyConfiguration;
+    public ApiUserService getUserService() {
+        return this.userService;
+    }
+
+    @Override
+    public ApiEconomyService getEconomyService() {
+        return this.bridge.getEconomyService();
+    }
+
+    @Override
+    public ApiCalendarService getCalendarService() {
+        return this.bridge.getCalendarService();
     }
 }
