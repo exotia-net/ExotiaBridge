@@ -2,31 +2,26 @@ package net.exotia.bridge.spigot.client;
 
 import com.google.gson.Gson;
 import eu.okaeri.injector.annotation.Inject;
-import eu.okaeri.injector.annotation.PostConstruct;
+import net.exotia.bridge.shared.configuration.spigot.SpigotConfiguration;
 import net.exotia.bridge.shared.exceptions.UndefinedUserException;
-import net.exotia.bridge.shared.services.CalendarService;
 import net.exotia.bridge.shared.services.UserService;
 import net.exotia.bridge.shared.services.entities.User;
 import net.exotia.bridge.shared.services.responses.CalendarResponse;
 import net.exotia.bridge.shared.websocket.SocketResponse;
-import net.exotia.bridge.spigot.configuration.PluginConfiguration;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.*;
 import java.util.logging.Logger;
 
 public class WebSocketClient extends WebSocketListener {
     @Inject private Logger logger;
     @Inject private Plugin plugin;
     @Inject private UserService userService;
-    @Inject private CalendarService calendarService;
-    @Inject private PluginConfiguration configuration;
+    @Inject private SpigotConfiguration configuration;
 
     private final Gson gson = new Gson();
 

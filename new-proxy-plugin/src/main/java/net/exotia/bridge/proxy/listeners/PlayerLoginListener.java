@@ -1,25 +1,14 @@
 package net.exotia.bridge.proxy.listeners;
 
 import eu.okaeri.injector.annotation.Inject;
-import net.exotia.bridge.messaging_api.channel.MessagingChannels;
-import net.exotia.bridge.messaging_api.packets.TokenPacket;
-import net.exotia.bridge.proxy.configuration.TokenStorage;
 import net.exotia.bridge.proxy.messaging.BungeeMessagingService;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.connection.Server;
-import net.md_5.bungee.api.event.LoginEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
-import net.md_5.bungee.api.event.ServerConnectEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.event.EventHandler;
 
-import java.util.Collections;
-import java.util.stream.Collectors;
-
 public class PlayerLoginListener implements Listener {
     @Inject private BungeeMessagingService bungeeMessagingService;
-    @Inject private TokenStorage tokenStorage;
     @Inject private Plugin plugin;
 
     @EventHandler

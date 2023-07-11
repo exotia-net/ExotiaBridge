@@ -1,11 +1,11 @@
 package net.exotia.bridge.spigot.listeners;
 
 import eu.okaeri.injector.annotation.Inject;
+import net.exotia.bridge.shared.configuration.spigot.SpigotConfiguration;
 import net.exotia.bridge.shared.messages.MessageService;
 import net.exotia.bridge.shared.services.UserService;
 import net.exotia.bridge.shared.services.entities.ExotiaPlayer;
 import net.exotia.bridge.shared.services.entities.User;
-import net.exotia.bridge.spigot.configuration.PluginConfiguration;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,7 +17,7 @@ import org.bukkit.plugin.Plugin;
 public class PlayerJoinListener implements Listener {
     @Inject private UserService userService;
     @Inject private Plugin plugin;
-    @Inject private PluginConfiguration configuration;
+    @Inject private SpigotConfiguration configuration;
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerLogin(PlayerLoginEvent event) {

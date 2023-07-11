@@ -1,4 +1,4 @@
-package net.exotia.bridge.spigot.configuration;
+package net.exotia.bridge.shared.configuration.spigot;
 
 import eu.okaeri.configs.OkaeriConfig;
 import eu.okaeri.configs.annotation.Comment;
@@ -8,7 +8,7 @@ import net.exotia.bridge.shared.ApiConfiguration;
 import java.util.List;
 
 @Getter
-public class PluginConfiguration extends OkaeriConfig implements ApiConfiguration {
+public class SpigotConfiguration extends OkaeriConfig implements ApiConfiguration {
     private String serverId = "Survival";
     @Comment("Interface url.")
     private String baseUrl = "https://api.exotia.net";
@@ -27,3 +27,4 @@ public class PluginConfiguration extends OkaeriConfig implements ApiConfiguratio
         return true;
     }
 }
+

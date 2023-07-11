@@ -80,6 +80,21 @@
             <version>3.2.0</version>
         </dependency>
         <dependency>
+            <groupId>eu.okaeri</groupId>
+            <artifactId>okaeri-configs-yaml-bungee</artifactId>
+            <version>4.0.0-beta4</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.okaeri</groupId>
+            <artifactId>okaeri-configs-yaml-bukkit</artifactId>
+            <version>4.0.0-beta4</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.okaeri</groupId>
+            <artifactId>okaeri-configs-yaml-snakeyaml</artifactId>
+            <version>4.0.0-beta4</version>
+        </dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.24</version>

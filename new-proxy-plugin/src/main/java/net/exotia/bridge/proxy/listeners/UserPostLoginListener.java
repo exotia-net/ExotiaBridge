@@ -1,7 +1,7 @@
 package net.exotia.bridge.proxy.listeners;
 
 import eu.okaeri.injector.annotation.Inject;
-import net.exotia.bridge.proxy.configuration.PluginConfiguration;
+import net.exotia.bridge.shared.configuration.proxy.ProxyConfiguration;
 import net.exotia.bridge.shared.messages.MessageService;
 import net.exotia.bridge.shared.services.UserService;
 import net.exotia.bridge.shared.services.entities.ExotiaPlayer;
@@ -15,7 +15,7 @@ import java.net.SocketAddress;
 
 public class UserPostLoginListener implements Listener {
     @Inject private UserService userService;
-    @Inject private PluginConfiguration configuration;
+    @Inject private ProxyConfiguration configuration;
 
     @EventHandler
     public void onPlayerLogIn(UserPreLoginEvent event) {

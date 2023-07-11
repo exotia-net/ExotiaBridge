@@ -1,4 +1,4 @@
-package net.exotia.bridge.proxy.configuration;
+package net.exotia.bridge.shared.configuration.proxy;
 
 import eu.okaeri.configs.OkaeriConfig;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-public class PluginConfiguration extends OkaeriConfig implements ApiConfiguration {
+public class ProxyConfiguration extends OkaeriConfig implements ApiConfiguration {
     private String serverId = "proxy";
     private String baseUrl = "https://api.exotia.net";
     private String apiKey = "d!noT41*Z8UbxB}JZ<s8'#'GA";
