@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>api</artifactId>
-    <version>1.0.8</version>
+    <version>1.0.9</version>
 
     <properties>
         <java.version>16</java.version>
