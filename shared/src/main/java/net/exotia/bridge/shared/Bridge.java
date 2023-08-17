@@ -18,7 +18,7 @@ public abstract class Bridge {
         return this.userService;
     }
     public EconomyService getEconomyService() {
-        return new EconomyService(this.userService);
+        return new EconomyService(this.userService, this.httpService, this.getApiConfiguration());
     }
     public CalendarService getCalendarService() {
         return new CalendarService(this.userService);

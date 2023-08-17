@@ -56,6 +56,9 @@ public class WebSocketClient extends WebSocketListener {
                 break;
             case "PUT /calendar":
                 break;
+            case "POST /servers/{serverId}/economy/add":
+                // Czekamy na maksia
+                break;
             default:
                 this.logger.severe(String.format("Invalid request! %s (%s)", socketResponse.getEndpoint(), socketResponse.getMessage()));
         }

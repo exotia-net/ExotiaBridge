@@ -1,6 +1,10 @@
 package net.exotia.bridge.api.user;
 
+import net.exotia.bridge.api.entities.TopUserEntity;
+
+import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public interface ApiEconomyService {
     boolean has(ApiUser apiUser, int value);
@@ -12,4 +16,6 @@ public interface ApiEconomyService {
     void giveRaw(UUID uuid, int value);
     void save(ApiUser apiUser);
     void save(UUID uuid);
+
+    CompletableFuture<List<TopUserEntity>> getTops(int limit);
 }

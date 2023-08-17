@@ -7,6 +7,7 @@ import net.exotia.bridge.shared.services.entities.ExotiaPlayer;
 import okhttp3.*;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -33,6 +34,9 @@ public class HttpService {
                 .build();
         return wsClient.newWebSocket(request, webSocketListener);
     }
+    public String getApiKey(ApiConfiguration configuration) {
+        return new ExotiaPlayer(UUID.fromString("00000000-0000-0000-0000-000000000000"), "0", "0.0.0.0").getCipher(configuration);
+    }
     private String switchProtocols(String string) {
         return string.replace("http", "ws").replace("https", "wss");
     }
@@ -48,6 +52,17 @@ public class HttpService {
             String responseString = response.body().string();
             if (tClass == null) return new HttpResponse<T>(response, (T) "ee");
             return new HttpResponse<>(response, this.gson.fromJson(responseString, tClass));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Response get(String uri, Map<String, String> headers){
+        Request.Builder builder = new Request.Builder().url(uri).get().addHeader("Content-Type", "application/json");
+        if (headers != null) headers.forEach(builder::addHeader);
+        Request request = builder.build();
+        try (Response response = this.httpClient.newCall(request).execute()) {
+            return response;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

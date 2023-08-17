@@ -6,6 +6,7 @@ public class Endpoints {
     public static final String AUTH_SIGNUP = "/auth/signUp";
     public static final String PLAYER_BALANCE = "/api/servers/%s";
     public static final String PLAYER_WALLET_BALANCE = "/api/wallet";
+    public static final String ECONOMY_TOP = "/api/servers/%s/economy/tops";
 
     public static final String GET_PLAYER_BALANCE_WS = "GET /servers/%s/economy %s";
     public static final String UPDATE_PLAYER_BALANCE_WS = "POST /servers/%s/economy %s %s";
@@ -17,5 +18,8 @@ public class Endpoints {
 
     public static String getUri(String endpoint, ApiConfiguration configuration) {
         return String.join("", configuration.getBaseUrl(), String.format(endpoint, configuration.getServerId()));
+    }
+    public static String getUri(String endpoint, ApiConfiguration configuration, String params) {
+        return getUri(endpoint, configuration) + params;
     }
 }

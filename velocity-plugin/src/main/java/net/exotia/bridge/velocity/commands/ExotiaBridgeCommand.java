@@ -9,7 +9,6 @@ import dev.rollczi.litecommands.argument.joiner.Joiner;
 import dev.rollczi.litecommands.command.execute.Execute;
 import dev.rollczi.litecommands.command.route.Route;
 import eu.okaeri.injector.annotation.Inject;
-import net.exotia.bridge.velocity.VelocityPlugin;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
 @Route(name = "bridge")
