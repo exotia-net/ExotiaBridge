@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import static net.exotia.bridge.shared.Endpoints.*;
 
@@ -61,8 +62,9 @@ public class HttpService {
         Request.Builder builder = new Request.Builder().url(uri).get().addHeader("Content-Type", "application/json");
         if (headers != null) headers.forEach(builder::addHeader);
         Request request = builder.build();
-        try (Response response = this.httpClient.newCall(request).execute()) {
-            return response;
+
+        try {
+            return this.httpClient.newCall(request).execute();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -84,8 +84,8 @@ public class EconomyService implements ApiEconomyService {
                 throw new HttpRequestException("Failed with status code " + response.code());
 
             try {
-                assert response.body() != null;
-                return List.of(this.gson.fromJson(response.body().string(), TopUserEntity.class));
+//                String bodyString = response.body().string();
+                return List.of(this.gson.fromJson(response.body().string(), TopUserEntity[].class));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
